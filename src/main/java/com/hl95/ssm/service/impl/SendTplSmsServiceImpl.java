@@ -39,6 +39,7 @@ public class SendTplSmsServiceImpl implements SendTplSmsService {
     private ValidateSendTplSmsParams validateSendTplSmsParams;
     @Autowired
     private ValidateUserAndPwd validateUserAndPwd;
+    @Autowired
     private PlatformTransactionManager ptm;
     @Autowired
     private AddressMapper addressMapper;
@@ -77,7 +78,7 @@ public class SendTplSmsServiceImpl implements SendTplSmsService {
         DefaultTransactionDefinition definition = new DefaultTransactionDefinition();
         definition.setIsolationLevel(TransactionDefinition.ISOLATION_READ_COMMITTED);
         definition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
-        //TransactionStatus satus = ptm.getTransaction(definition);
+        TransactionStatus satus = ptm.getTransaction(definition);
         try {
             sendTplsmsMapper.saveBatch(sendTplsms);
             for (SendTplsms s:sendTplsms){
@@ -90,7 +91,7 @@ public class SendTplSmsServiceImpl implements SendTplSmsService {
             result.put("result",l);
             return result;
         }catch (Exception e){
-            //ptm.rollback(satus);
+            ptm.rollback(satus);
             for (SendTplsms s:sendTplsms){
                 result.put("rrid",s.getRrid());
                 result.put("status","-1");
@@ -99,7 +100,7 @@ public class SendTplSmsServiceImpl implements SendTplSmsService {
             e.printStackTrace();
             //return result;
         }
-        //ptm.commit(satus);
+        ptm.commit(satus);
         return result;
     }
 }
