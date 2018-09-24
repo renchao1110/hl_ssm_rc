@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hl95.ssm.dao.SendTplsmsMapper">
+  <resultMap id="BaseResultMap" type="com.hl95.ssm.entity.SendTplsms">
+    <id column="rrid" jdbcType="VARCHAR" property="rrid" />
+    <result column="tpl_id" jdbcType="VARCHAR" property="tpl_id" />
+    <result column="tpl_content" jdbcType="VARCHAR" property="tpl_content" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="ext" jdbcType="VARCHAR" property="ext" />
+    <result column="stime" jdbcType="VARCHAR" property="stime" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="reason" jdbcType="VARCHAR" property="reason" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="string">
+    delete from sendtplsms
+    where rrid = #{rrid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.hl95.ssm.entity.SendTplsms">
+    insert into sendtplsms (
+      tpl_id, tpl_content, mobile, 
+      ext, stime, rrid, state,status,reason)
+    values (
+      #{tpl_content,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR},
+      #{ext,jdbcType=VARCHAR}, #{stime,jdbcType=VARCHAR}, #{rrid,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{reason,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.hl95.ssm.entity.SendTplsms">
+    update sendtplsms
+    set
+      tpl_content = #{tpl_content,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      ext = #{ext,jdbcType=VARCHAR},
+      stime = #{stime,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      reason = #{reason,jdbcType=VARCHAR},
+      state = #{state,jdbcType=VARCHAR}
+    where rrid = #{rrid,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select tpl_id, tpl_content, mobile, ext, stime, rrid, state ,status,reason
+    from sendtplsms
+    where rrid = #{rrid,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select tpl_id, tpl_content, mobile, ext, stime, rrid, state,status,reason
+    from sendtplsms
+  </select>
+
+  <insert id="saveBatch"  parameterType="java.util.List" useGeneratedKeys="true" keyProperty="rrid">
+    insert into sendtplsms (
+      rrid, tpl_id, tpl_content, mobile,
+      ext, stime, state,status,reason)
+    values
+      <foreach collection="list"  separator="," item="item" index="index">
+        (
+        /*(select replace(UUID(),'-','')),*/
+        #{item.rrid},
+        #{item.tpl_id},
+        #{item.tpl_content},
+        #{item.mobile},
+        #{item.ext},
+        #{item.stime},
+        #{item.state},
+        #{item.status},
+        #{item.reason}
+        )
+      </foreach>
+  </insert>
+
+
+  <insert id="saveBatchMap"  parameterType="java.util.HashMap">
+    insert into sendtplsms (
+    rrid, tpl_id, tpl_content, mobile,
+    ext, stime, state,status,reason)
+    values
+    <foreach collection="map"  separator="," item="item" index="index">
+      select (
+      (select replace(UUID(),'-','')),
+      #{item.tpl_id},
+      #{item.tpl_content},
+      #{item.mobile},
+      #{item.ext},
+      #{item.stime},
+      #{item.state},
+      #{item.status},
+      #{item.reason}
+      ) from daul
+    </foreach>
+  </insert>
+</mapper>

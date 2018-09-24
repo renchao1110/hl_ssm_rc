@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+    <!--引用配置信息-->
+    <properties resource="config/config.properties">
+        <!-- 在properties内部用property定义属性 -->
+        <!-- 如果外部配置文件有该属性，则内部定义属性被外部属性覆盖 ，在
+            properties 元素体内定义的属性首先被读取，然后会读取properties
+            元素中resource或 url 加载的属性，它会覆盖已读取的同名属性。 -->
+        <!--<property name="jdbc.password" value="被外部覆盖"/>-->
+    </properties>
+
+    <!--自定义别名（紧接着properties后面，不然报错 不知道为什么）-->
+    <typeAliases>
+        <!--<typeAlias type="com.yyyu.mybatis.pojo.User" alias="user"/>-->
+        <!-- 批量别名定义，扫描整个包下的类，别名为类名（大小写不敏感） -->
+        <package name="com.hl95.ssm.entity"/>
+    </typeAliases>
+
+    <!--和Spring整合后environments配置将被废除-->
+    <environments default="development">
+        <environment id="development">
+            <!--使用JDBC事务管理-->
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${driverClassName}"/>
+                <property name="url" value="${jdbc_url}"/>
+                <property name="username" value="${jdbc_username}"/>
+                <property name="password" value="${jdbc_password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <!--加载映射文件-->
+    <mappers>
+
+        <mapper resource="mappers/UserMapper.xml"/>
+        <mapper resource="mappers/MsgTempletMapper.xml"/>
+        <mapper resource="mappers/AddressMapper.xml"/>
+        <mapper resource="mappers/SendTplsmsMapper.xml"/>
+        <!--此种方法要求mapper接口名称和mapper映射文件名称相同，且放在同一个目录中。-->
+        <!--<package name="com.hl95.ssm.dao"/>-->
+    </mappers>
+
+</configuration>
