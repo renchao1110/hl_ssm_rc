@@ -6,6 +6,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 /**
@@ -18,8 +19,12 @@ import java.util.Map;
 public class ValidateUserAndPwd {
     @Autowired
     private UserMapper userMapper;
-    public  boolean validateUserAndPwd(Map<String,Object> params) {
-            User user = userMapper.findUserBySnid((String) params.get("sn"));
+    public  boolean validateUserAndPwd(Map<String,Object> params, HttpSession session) {
+        User user = (User)session.getAttribute("user");
+        if (user==null){
+            user = userMapper.findUserBySnid((String) params.get("sn"));
+            session.setAttribute("user",user);
+        }
             if (user != null) {
                 String temp = (String) params.get("sn") + params.get("pwd");
                 String token = DigestUtils.md5Hex(temp);

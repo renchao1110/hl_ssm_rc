@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,6 +52,10 @@ public class TplMsgServiceImpl implements TplMsgService {
                 String token = DigestUtils.md5Hex(temp);
                 String tpl_content = (String) params.get("tpl_content");
                 if (token.equals(user.getPwd())){
+                    HttpSession session = request.getSession();
+                    if(session.getAttribute("user")==null){
+                        session.setAttribute("user",user);
+                    }
                     if (Msg_Tpl_ValidateParams.regx(tpl_content)){
                         result.put(SendTplSmsEnums.Status_00.getKey(),SendTplSmsEnums.Status_00.getValue());
                         result.put(SendTplSmsEnums.Reason_00.getKey(),SendTplSmsEnums.Reason_00.getValue());
@@ -104,6 +109,10 @@ public class TplMsgServiceImpl implements TplMsgService {
                 String temp = (String)params.get("sn")+params.get("pwd");
                 String token = DigestUtils.md5Hex(temp);
                 if (token.equals(user.getPwd())){
+                    HttpSession session = request.getSession();
+                    if(session.getAttribute("user")==null){
+                        session.setAttribute("user",user);
+                    }
                     String tpl_id = (String) params.get("tpl_id");
                     if (tpl_id!=null&&!"".equals(tpl_id)){
                         MsgTemplet msgTemplet = msgTempletMapper.selectByPrimaryKey(tpl_id);
@@ -158,6 +167,10 @@ public class TplMsgServiceImpl implements TplMsgService {
                 String temp = (String)params.get("sn")+params.get("pwd");
                 String token = DigestUtils.md5Hex(temp);
                 if (token.equals(user.getPwd())){
+                    HttpSession session = request.getSession();
+                    if(session.getAttribute("user")==null){
+                        session.setAttribute("user",user);
+                    }
                     String tpl_id = (String) params.get("tpl_id");
                     if (tpl_id!=null&&!"".equals(tpl_id)){
                         Map<String,Object> temps = new HashMap<>(16);
@@ -212,6 +225,10 @@ public class TplMsgServiceImpl implements TplMsgService {
                 String temp = (String)params.get("sn")+params.get("pwd");
                 String token = DigestUtils.md5Hex(temp);
                 if (token.equals(user.getPwd())){
+                    HttpSession session = request.getSession();
+                    if(session.getAttribute("user")==null){
+                        session.setAttribute("user",user);
+                    }
                     String tpl_id = (String) params.get("tpl_id");
                     if (tpl_id!=null&&!"".equals(tpl_id)){
                         int i = msgTempletMapper.deleteByPrimaryKey(tpl_id);

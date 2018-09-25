@@ -9,7 +9,7 @@ import java.util.Map;
 public interface SendTplsmsMapper {
     int deleteByPrimaryKey(Integer id);
 
-    int insert(SendTplsms record);
+    int saveOne(SendTplsms sendTplsms);
 
     SendTplsms selectByPrimaryKey(Integer id);
 
@@ -20,4 +20,11 @@ public interface SendTplsmsMapper {
     int saveBatch(@Param("list") List<SendTplsms> list);
 
     int saveBatchMap(@Param("list") List<Map<String,Object> > list);
+
+    int deleteByrrids(List<String> rridsOk);
+
+    int updateByOK(List<String> rridsOk);
+
+    int updateByError(List<String> rridsError);
+
 }

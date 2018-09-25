@@ -6,35 +6,37 @@
     <result column="sn" jdbcType="VARCHAR" property="sn" />
     <result column="pwd" jdbcType="VARCHAR" property="pwd" />
     <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from user
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.hl95.ssm.entity.User">
-    insert into user (id, sn, pwd ,username
+    insert into user (id, sn, pwd ,username,password
       )
-    values (#{id,jdbcType=INTEGER}, #{sn,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR},#{username,jdbcType=VARCHAR}
+    values (#{id,jdbcType=INTEGER}, #{sn,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR},#{username,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR}
       )
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.hl95.ssm.entity.User">
     update user
     set sn = #{sn,jdbcType=VARCHAR},
       pwd = #{pwd,jdbcType=VARCHAR},
-      username = #{username,jdbcType=VARCHAR}
+      username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select id, sn, pwd,username
+    select id, sn, pwd,username,password
     from user
     where id = #{id,jdbcType=INTEGER}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
-    select id, sn, pwd,username
+    select id, sn, pwd,username,password
     from user
   </select>
   <sql id="selectAll" >
-    id, sn, pwd,username
+    id, sn, pwd,username,password
   </sql>
   <select id="findUserBySnid" parameterType="string" resultMap="BaseResultMap">
     select

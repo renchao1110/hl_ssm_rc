@@ -66,7 +66,7 @@ public class MybatisTest {
         params.put("status","00");
         params.put("reason","ok:成功");
         //int i = mapper.saveMsgTemplet(params);
-        User user = mapper.findUserBySnid("666");
+        User user = mapper.findUserBySnid("109765");
         session.commit();
         session.close();
         System.out.println(user);

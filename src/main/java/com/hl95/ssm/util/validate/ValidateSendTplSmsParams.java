@@ -27,7 +27,7 @@ public class ValidateSendTplSmsParams {
     protected  MsgTempletMapper msgTempletMapper;
     private static final Pattern p = Pattern.compile("[0-9]{1,}");
     public Map<String,Object> validateSendTplSmsParams(Map<String,Object> params){
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:ss:mm");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Map<String,Object> result = new HashMap<String,Object>(16);
         //企业ID
         String sn = StringUtils.toString(params.get("sn"));

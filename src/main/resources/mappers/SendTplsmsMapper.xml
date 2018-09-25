@@ -16,11 +16,11 @@
     delete from sendtplsms
     where rrid = #{rrid,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.hl95.ssm.entity.SendTplsms">
+  <insert id="saveOne" parameterType="com.hl95.ssm.entity.SendTplsms">
     insert into sendtplsms (
       tpl_id, tpl_content, mobile, 
       ext, stime, rrid, state,status,reason)
-    values (
+    values (#{tpl_id,jdbcType=VARCHAR},
       #{tpl_content,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR},
       #{ext,jdbcType=VARCHAR}, #{stime,jdbcType=VARCHAR}, #{rrid,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{reason,jdbcType=VARCHAR}
       )
@@ -88,4 +88,36 @@
       ) from daul
     </foreach>
   </insert>
+
+
+  <delete id="deleteByrrids" parameterType="string">
+    delete from sendtplsms
+    where rrid in
+    <foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+      #{item}
+    </foreach>
+  </delete>
+
+
+  <update id="updateByOK" parameterType="string">
+    update sendtplsms
+    set
+      reason = '下发成功',
+      state = '00'
+    where rrid in
+      <foreach collection="list" close=")" open="(" separator="," index="index" item="item">
+        #{item}
+      </foreach>
+  </update>
+
+  <update id="updateByError" parameterType="string">
+    update sendtplsms
+    set
+    reason = '下发失败',
+    state = '-1'
+    where rrid in
+    <foreach collection="list" close=")" open="(" separator="," index="index" item="item">
+      #{item}
+    </foreach>
+  </update>
 </mapper>
