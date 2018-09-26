@@ -2,10 +2,9 @@ package com.hl95.ssm.service.impl;
 
 import com.hl95.ssm.dao.AddressMapper;
 import com.hl95.ssm.dao.MsgTempletMapper;
+import com.hl95.ssm.dao.SendTplSmsResultMapper;
 import com.hl95.ssm.dao.SendTplsmsMapper;
-import com.hl95.ssm.dao.UserMapper;
 import com.hl95.ssm.entity.SendTplsms;
-import com.hl95.ssm.entity.User;
 import com.hl95.ssm.service.SendTplSmsService;
 import com.hl95.ssm.util.RemoteHostUtil;
 import com.hl95.ssm.util.enums.SendTplSmsEnums;
@@ -13,7 +12,6 @@ import com.hl95.ssm.util.resolve.ParamsResolve;
 import com.hl95.ssm.util.resolve.ResolveSmsMsg;
 import com.hl95.ssm.util.send.SendTplSmsPost;
 import com.hl95.ssm.util.timerTask.SendTplSmsTimerTask;
-import com.hl95.ssm.util.timerTask.SendTplSmsTimerTask2;
 import com.hl95.ssm.util.validate.ValidateSendTplSmsParams;
 import com.hl95.ssm.util.validate.ValidateUserAndPwd;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -55,6 +53,8 @@ public class SendTplSmsServiceImpl implements SendTplSmsService {
     private MsgTempletMapper msgTempletMapper;
     @Autowired
     private SendTplsmsMapper sendTplsmsMapper;
+    @Autowired
+    private SendTplSmsResultMapper sendTplSmsResultMapper;
     @Autowired
     private SendTplSmsPost sendTplSmsPost;
     @Override
@@ -85,10 +85,10 @@ public class SendTplSmsServiceImpl implements SendTplSmsService {
         }
         //5.解析并封装要保存的参数
         List<SendTplsms> sendTplsms = ResolveSmsMsg.resolveSms(params);
-        /*DefaultTransactionDefinition definition = new DefaultTransactionDefinition();
+        DefaultTransactionDefinition definition = new DefaultTransactionDefinition();
         definition.setIsolationLevel(TransactionDefinition.ISOLATION_READ_COMMITTED);
         definition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
-        TransactionStatus satus = ptm.getTransaction(definition);*/
+        TransactionStatus satus = ptm.getTransaction(definition);
         //if (sendTplsms.size()>1){
             try {
                 sendTplsmsMapper.saveBatch(sendTplsms);
@@ -110,18 +110,17 @@ public class SendTplSmsServiceImpl implements SendTplSmsService {
                     try {
                         Date date = sdf.parse(stime);
                         HttpSession session = request.getSession();
-                        //ScheduledExecutorService scheduExec = Executors.newScheduledThreadPool(2);
-                        SendTplSmsTimerTask task = new SendTplSmsTimerTask(session,sendTplsms,sendTplsmsMapper);
-                        //Timer timer = new Timer();
-                        new Timer().schedule(task,date);
-                        //SendTplSmsTimerTask2 smsTimerTask2 = new SendTplSmsTimerTask2(session,sendTplsms);
-                        //ScheduledFuture schedule = scheduExec.schedule(smsTimerTask2, date.getTime(), TimeUnit.MILLISECONDS);
+                        //定时执行短信发送任务
+                        SendTplSmsTimerTask task = new SendTplSmsTimerTask(session,sendTplsms,sendTplsmsMapper,sendTplSmsResultMapper);
+                        new ScheduledThreadPoolExecutor(1).schedule(task,date.getTime()-System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+                        //new Timer().schedule(task,date);
 
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
                 }else {
                     Map<String, String> map = sendTplSmsPost.sendBatchTplSms(request.getSession(true), sendTplsms);
+                    //根据返回信息更新数据库信息
                     for (Map.Entry<String,String> entry:map.entrySet()){
                         String rrid  = entry.getKey();
                         String status  = entry.getValue();
@@ -133,13 +132,21 @@ public class SendTplSmsServiceImpl implements SendTplSmsService {
                     }
                 }
                 if (rridsOk.size()!=0){
-                    sendTplsmsMapper.updateByOK(rridsOk);
+                    try {
+                        sendTplSmsResultMapper.saveBatch(rridsOk);
+                        sendTplsmsMapper.deleteByrrids(rridsOk);
+                        ptm.commit(satus);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        ptm.rollback(satus);
+                    }
+
                 }
                 if (rridsError.size()!=0){
                     sendTplsmsMapper.updateByError(rridsError);
                 }
                 result.put("result",l);
-                //ptm.commit(satus);
+                ptm.commit(satus);
                 return result;
             }catch (Exception e){
                 //ptm.rollback(satus);
@@ -153,27 +160,6 @@ public class SendTplSmsServiceImpl implements SendTplSmsService {
                 result.put("result",l);
                 e.printStackTrace();
             }
-        /*}else{
-            SendTplsms tplsms = sendTplsms.get(0);
-            sendTplsmsMapper.saveOne(tplsms);
-            String stime = sendTplsms.get(0).getStime();
-            if (stime!=null&&!"".equals(stime)){
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                try {
-                    Date date = sdf.parse(stime);
-                    HttpSession session = request.getSession();
-                    SendTplSmsTimerTask task = new SendTplSmsTimerTask(session,sendTplsms);
-                    //Timer timer = new Timer();
-                    new Timer().schedule(task,date);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-            }else {
-                sendTplSmsPost.sendTplSms(request.getSession(true),sendTplsms.get(0));
-            }
-        }*/
         return result;
-
-
     }
 }

@@ -1,9 +1,6 @@
 package test.dao;
 
-import com.hl95.ssm.dao.AddressMapper;
-import com.hl95.ssm.dao.MsgTempletMapper;
-import com.hl95.ssm.dao.SendTplsmsMapper;
-import com.hl95.ssm.dao.UserMapper;
+import com.hl95.ssm.dao.*;
 import com.hl95.ssm.entity.Address;
 import com.hl95.ssm.entity.MsgTemplet;
 import com.hl95.ssm.entity.SendTplsms;
@@ -194,5 +191,22 @@ public class MybatisTest {
 
     }
 
+
+
+    @Test
+    public void testMapperDao8(){
+
+        SqlSession session = sessionFactory.openSession();
+        SendTplSmsResultMapper mapper = session.getMapper(SendTplSmsResultMapper.class);
+        List<String> l = new ArrayList<>();
+        l.add("3b680712a747418ebb432e7a607c1d31");
+        l.add("5ad1de5264054ab7a693caff4f7c138c");
+        l.add("8814cc3a80f64cf3ba7fa6f6959014c4");
+        l.add("b2907e248a4e4dec886eea800ed40954");
+        l.add("bce7eb4f870645da9e54d5ee287b9a04");
+        int i = mapper.saveBatch(l);
+        session.commit();
+        System.out.println(i);
+    }
 
 }

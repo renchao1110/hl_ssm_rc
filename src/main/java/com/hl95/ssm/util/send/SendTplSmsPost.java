@@ -3,8 +3,6 @@ package com.hl95.ssm.util.send;
 import com.hl95.ssm.dao.UserMapper;
 import com.hl95.ssm.entity.SendTplsms;
 import com.hl95.ssm.entity.User;
-import com.sun.tools.javac.util.ArrayUtils;
-import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -37,7 +35,10 @@ public class SendTplSmsPost {
     @Autowired
     private UserMapper userMapper;
     private static final String sendURL = "http://q.hl95.com:8061";
-    public String sendTplSms(HttpSession session, SendTplsms tplsms){
+    private static final String EPID = "109765";
+
+
+    /*public String sendTplSms(HttpSession session, SendTplsms tplsms){
         User user = (User) session.getAttribute("user");
         if (user==null){
             user = userMapper.findUserBySnid("109765");
@@ -73,15 +74,21 @@ public class SendTplSmsPost {
             }
         }
         return body;
-    }
+    }*/
 
 
+    /**
+     *
+     * @param session 当前会话
+     * @param tplsmss 要发送的对象消息
+     * @return 封装的返回信息
+     */
     public Map<String,String> sendBatchTplSms(HttpSession session, List<SendTplsms> tplsmss){
         String body = "-1";
         Map<String,String> result = new HashMap<>();
         User user = (User) session.getAttribute("user");
         if (user==null){
-            user = userMapper.findUserBySnid("109765");
+            user = userMapper.findUserBySnid(EPID);
         }
         CloseableHttpClient client = HttpClients.createDefault();
         HttpPost post = new HttpPost(sendURL);
@@ -112,12 +119,17 @@ public class SendTplSmsPost {
                     }
                 }
             }
-            //return result;
         }
         return result;
     }
 
 
+    /**
+     * 解析并封装post请求参数
+     * @param user  用户信息
+     * @param tplsms  要发送的消息内容
+     * @return
+     */
     public static List<NameValuePair> getPostEntity(User user,SendTplsms tplsms){
         List<NameValuePair> pairList = new ArrayList<>();
         Field[] userFields = user.getClass().getDeclaredFields();

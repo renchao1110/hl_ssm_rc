@@ -42,6 +42,7 @@
         <mapper resource="mappers/MsgTempletMapper.xml"/>
         <mapper resource="mappers/AddressMapper.xml"/>
         <mapper resource="mappers/SendTplsmsMapper.xml"/>
+        <mapper resource="mappers/SendTplSmsResultMapper.xml"/>
         <!--此种方法要求mapper接口名称和mapper映射文件名称相同，且放在同一个目录中。-->
         <!--<package name="com.hl95.ssm.dao"/>-->
     </mappers>

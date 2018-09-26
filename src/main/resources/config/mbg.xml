@@ -41,6 +41,6 @@
 		<!--<table tableName="user" domainObjectName="User"></table>
 		<table tableName="msg_templet" domainObjectName="MsgTemplet"></table>
 		<table tableName="sendtplsms" domainObjectName="SendTplsms"></table>-->
-		<table tableName="address" domainObjectName="Address"></table>
+		<table tableName="sendtplsms_result" domainObjectName="SendTplSmsResult"></table>
 	</context>
 </generatorConfiguration>

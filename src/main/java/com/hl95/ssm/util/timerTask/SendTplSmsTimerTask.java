@@ -1,11 +1,9 @@
 package com.hl95.ssm.util.timerTask;
 
+import com.hl95.ssm.dao.SendTplSmsResultMapper;
 import com.hl95.ssm.dao.SendTplsmsMapper;
 import com.hl95.ssm.entity.SendTplsms;
 import com.hl95.ssm.util.send.SendTplSmsPost;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,15 +23,17 @@ public class SendTplSmsTimerTask extends TimerTask {
     public SendTplSmsTimerTask() {
     }
 
-    public SendTplSmsTimerTask(HttpSession session, List<SendTplsms> list,SendTplsmsMapper sendTplsmsMapper) {
+    public SendTplSmsTimerTask(HttpSession session, List<SendTplsms> list,SendTplsmsMapper sendTplsmsMapper,SendTplSmsResultMapper sendTplSmsResultMapper) {
         this.session = session;
         this.list = list;
         this.sendTplsmsMapper = sendTplsmsMapper;
+        this.sendTplSmsResultMapper = sendTplSmsResultMapper;
     }
 
     private HttpSession session;
     private List<SendTplsms> list;
     private SendTplsmsMapper sendTplsmsMapper;
+    private SendTplSmsResultMapper sendTplSmsResultMapper;
     @Override
     public void run() {
         List<String> rridsOk = new ArrayList<>();
@@ -49,7 +49,8 @@ public class SendTplSmsTimerTask extends TimerTask {
             }
         }
         if (rridsOk.size()!=0){
-            sendTplsmsMapper.updateByOK(rridsOk);
+            sendTplSmsResultMapper.saveBatch(rridsOk);
+            sendTplsmsMapper.deleteByrrids(rridsOk);
         }
         if (rridsError.size()!=0){
             sendTplsmsMapper.updateByError(rridsError);

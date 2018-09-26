@@ -114,7 +114,7 @@
     update sendtplsms
     set
     reason = '下发失败',
-    state = '-1'
+    status = '-1'
     where rrid in
     <foreach collection="list" close=")" open="(" separator="," index="index" item="item">
       #{item}
