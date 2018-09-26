@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hl95.ssm.dao.StateReportMapper">
+  <resultMap id="BaseResultMap" type="com.hl95.ssm.entity.StateReport">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="PlatForm" jdbcType="VARCHAR" property="platform" />
+    <result column="FUnikey" jdbcType="VARCHAR" property="funikey" />
+    <result column="FOrgAddr" jdbcType="VARCHAR" property="forgaddr" />
+    <result column="FDestAddr" jdbcType="VARCHAR" property="fdestaddr" />
+    <result column="FSubmitTime" jdbcType="VARCHAR" property="fsubmittime" />
+    <result column="FFeeTerminal" jdbcType="VARCHAR" property="ffeeterminal" />
+    <result column="FServiceUPID" jdbcType="INTEGER" property="fserviceupid" />
+    <result column="FReportCode" jdbcType="VARCHAR" property="freportcode" />
+    <result column="FLinkID" jdbcType="INTEGER" property="flinkid" />
+    <result column="FAckStatus" jdbcType="VARCHAR" property="fackstatus" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from statereport
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hl95.ssm.entity.StateReport">
+    insert into statereport (id, PlatForm, FUnikey, 
+      FOrgAddr, FDestAddr, FSubmitTime, 
+      FFeeTerminal, FServiceUPID, FReportCode, 
+      FLinkID, FAckStatus)
+    values (#{id,jdbcType=INTEGER}, #{platform,jdbcType=VARCHAR}, #{funikey,jdbcType=VARCHAR}, 
+      #{forgaddr,jdbcType=VARCHAR}, #{fdestaddr,jdbcType=VARCHAR}, #{fsubmittime,jdbcType=VARCHAR}, 
+      #{ffeeterminal,jdbcType=VARCHAR}, #{fserviceupid,jdbcType=INTEGER}, #{freportcode,jdbcType=VARCHAR}, 
+      #{flinkid,jdbcType=INTEGER}, #{fackstatus,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.hl95.ssm.entity.StateReport">
+    update statereport
+    set PlatForm = #{platform,jdbcType=VARCHAR},
+      FUnikey = #{funikey,jdbcType=VARCHAR},
+      FOrgAddr = #{forgaddr,jdbcType=VARCHAR},
+      FDestAddr = #{fdestaddr,jdbcType=VARCHAR},
+      FSubmitTime = #{fsubmittime,jdbcType=VARCHAR},
+      FFeeTerminal = #{ffeeterminal,jdbcType=VARCHAR},
+      FServiceUPID = #{fserviceupid,jdbcType=INTEGER},
+      FReportCode = #{freportcode,jdbcType=VARCHAR},
+      FLinkID = #{flinkid,jdbcType=INTEGER},
+      FAckStatus = #{fackstatus,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, PlatForm, FUnikey, FOrgAddr, FDestAddr, FSubmitTime, FFeeTerminal, FServiceUPID, 
+    FReportCode, FLinkID, FAckStatus
+    from statereport
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, PlatForm, FUnikey, FOrgAddr, FDestAddr, FSubmitTime, FFeeTerminal, FServiceUPID, 
+    FReportCode, FLinkID, FAckStatus
+    from statereport
+  </select>
+</mapper>
