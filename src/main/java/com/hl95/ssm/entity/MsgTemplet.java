@@ -9,6 +9,10 @@ public class MsgTemplet {
 
     private String reason;
 
+    private String state;
+
+    private String opinion;
+
     public String getTpl_id() {
         return tpl_id;
     }
@@ -41,13 +45,31 @@ public class MsgTemplet {
         this.reason = reason == null ? null : reason.trim();
     }
 
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getOpinion() {
+        return opinion;
+    }
+
+    public void setOpinion(String opinion) {
+        this.opinion = opinion;
+    }
+
     @Override
     public String toString() {
         return "MsgTemplet{" +
-                "id=" + tpl_id +
+                "tpl_id='" + tpl_id + '\'' +
                 ", tpl_content='" + tpl_content + '\'' +
                 ", status='" + status + '\'' +
                 ", reason='" + reason + '\'' +
+                ", state='" + state + '\'' +
+                ", opinion='" + opinion + '\'' +
                 '}';
     }
 }

@@ -85,10 +85,10 @@ public class SendTplSmsServiceImpl implements SendTplSmsService {
         }
         //5.解析并封装要保存的参数
         List<SendTplsms> sendTplsms = ResolveSmsMsg.resolveSms(params);
-        DefaultTransactionDefinition definition = new DefaultTransactionDefinition();
+        /*DefaultTransactionDefinition definition = new DefaultTransactionDefinition();
         definition.setIsolationLevel(TransactionDefinition.ISOLATION_READ_COMMITTED);
         definition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
-        TransactionStatus satus = ptm.getTransaction(definition);
+        TransactionStatus satus = ptm.getTransaction(definition);*/
         //if (sendTplsms.size()>1){
             try {
                 sendTplsmsMapper.saveBatch(sendTplsms);
@@ -135,10 +135,10 @@ public class SendTplSmsServiceImpl implements SendTplSmsService {
                     try {
                         sendTplSmsResultMapper.saveBatch(rridsOk);
                         sendTplsmsMapper.deleteByrrids(rridsOk);
-                        ptm.commit(satus);
+                        //ptm.commit(satus);
                     }catch (Exception e){
                         e.printStackTrace();
-                        ptm.rollback(satus);
+                        //ptm.rollback(satus);
                     }
 
                 }
@@ -146,7 +146,7 @@ public class SendTplSmsServiceImpl implements SendTplSmsService {
                     sendTplsmsMapper.updateByError(rridsError);
                 }
                 result.put("result",l);
-                ptm.commit(satus);
+                //ptm.commit(satus);
                 return result;
             }catch (Exception e){
                 //ptm.rollback(satus);

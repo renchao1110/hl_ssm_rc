@@ -6,6 +6,8 @@
     <result column="tpl_content" jdbcType="VARCHAR" property="tpl_content" />
     <result column="status" jdbcType="VARCHAR" property="status" />
     <result column="reason" jdbcType="VARCHAR" property="reason" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+    <result column="opinion" jdbcType="VARCHAR" property="opinion" />
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="string">
     delete from msg_templet
@@ -13,9 +15,9 @@
   </delete>
   <insert id="insert" parameterType="com.hl95.ssm.entity.MsgTemplet">
     insert into msg_templet (tpl_id, tpl_content, status,
-      reason)
+      reason,state,opinion)
     values (#{tpl_id,jdbcType=VARCHAR}, #{tpl_content,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},
-      #{reason,jdbcType=VARCHAR})
+      #{reason,jdbcType=VARCHAR},#{state,jdbcType=VARCHAR},#{opinion,jdbcType=VARCHAR})
   </insert>
   <update id="updateByParams" parameterType="map">
     update msg_templet
@@ -27,26 +29,32 @@
           status = #{status,jdbcType=VARCHAR},
         </if>
         <if test="reason!=null and reason!='' ">
-          reason = #{reason,jdbcType=VARCHAR}
+          reason = #{reason,jdbcType=VARCHAR},
+        </if>
+        <if test="state!=null and state!='' ">
+          state = #{state,jdbcType=VARCHAR},
+        </if>
+        <if test="opinion!=null and opinion!='' ">
+          opinion = #{opinion,jdbcType=VARCHAR}
         </if>
       </set>
     where tpl_id = #{tpl_id,jdbcType=VARCHAR}
   </update>
   <select id="selectByPrimaryKey" parameterType="string" resultMap="BaseResultMap">
-    select tpl_id, tpl_content, status, reason
+    select tpl_id, tpl_content, status, reason,state,opinion
     from msg_templet
     where tpl_id = #{tpl_id,jdbcType=VARCHAR}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
-    select tpl_id, tpl_content, status, reason
+    select tpl_id, tpl_content, status, reason,state,opinion
     from msg_templet
   </select>
 
   <sql id="insertAll" >
-    (tpl_id, tpl_content, status, reason)
+    (tpl_id, tpl_content, status, reason,state,opinion)
   </sql>
   <sql id="selectAll" >
-    tpl_id, tpl_content, status, reason
+    tpl_id, tpl_content,state,opinion
   </sql>
   <insert id="saveMsgTemplet" parameterType="map" keyProperty="tpl_id" useGeneratedKeys="true" keyColumn="tpl_id">
     <selectKey  keyProperty="tpl_id" resultType="string" order="BEFORE">
@@ -55,7 +63,7 @@
     </selectKey>
     insert into msg_templet <include refid="insertAll"></include>
     values (#{tpl_id,jdbcType=VARCHAR}, #{tpl_content,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},
-      #{reason,jdbcType=VARCHAR})
+      #{reason,jdbcType=VARCHAR},#{state,jdbcType=VARCHAR},#{opinion,jdbcType=VARCHAR})
   </insert>
 
   <select id="getManyMsgTemplets" resultMap="BaseResultMap">

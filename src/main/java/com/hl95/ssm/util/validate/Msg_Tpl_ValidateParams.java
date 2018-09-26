@@ -30,24 +30,24 @@ public class Msg_Tpl_ValidateParams implements BaseValidateParams{
         String tpl_content  = StringUtils.toString(params.get("tpl_content"));
         if(sn==null||StringUtils.isBlank(sn)){
             result.put(SendTplSmsEnums.Status_03.getKey(),SendTplSmsEnums.Status_03.getValue());
-            result.put(SendTplSmsEnums.Reason_03.getKey(),SendTplSmsEnums.Reason_03.getValue());
+            result.put(SendTplSmsEnums.Reason_10.getKey(),SendTplSmsEnums.Reason_10.getValue());
             return result;
         }
         if(pwd==null||StringUtils.isBlank(pwd)){
             result.put(SendTplSmsEnums.Status_03.getKey(),SendTplSmsEnums.Status_03.getValue());
-            result.put(SendTplSmsEnums.Reason_03.getKey(),SendTplSmsEnums.Reason_03.getValue());
+            result.put(SendTplSmsEnums.Reason_11.getKey(),SendTplSmsEnums.Reason_11.getValue());
             return result;
         }
         if(tpl_content==null||StringUtils.isBlank(tpl_content)) {
             result.put(SendTplSmsEnums.Status_03.getKey(), SendTplSmsEnums.Status_03.getValue());
-            result.put(SendTplSmsEnums.Reason_03.getKey(),SendTplSmsEnums.Reason_03.getValue());
+            result.put(SendTplSmsEnums.Reason_12.getKey(),SendTplSmsEnums.Reason_12.getValue());
             return result;
         }
-        /*if(!Msg_Tpl_ValidateParams.regx(tpl_content)){
+        if(!Msg_Tpl_ValidateParams.regx(tpl_content)){
             result.put(SendTplSmsEnums.Status_02.getKey(), SendTplSmsEnums.Status_02.getValue());
             result.put(SendTplSmsEnums.Reason_02.getKey(),SendTplSmsEnums.Reason_02.getValue());
             return result;
-        }*/
+        }
         if(tpl_content.length()>TPL_MSG_MAX){
             result.put(Msg_Tpl_Enums.Msg_Tpl_Enums_05.getKey(),Msg_Tpl_Enums.Msg_Tpl_Enums_05.getValue());
             return result;
@@ -67,12 +67,12 @@ public class Msg_Tpl_ValidateParams implements BaseValidateParams{
         String tpl_id  = StringUtils.toString(params.get("tpl_id"));
         if(sn==null||StringUtils.isBlank(sn)){
             result.put(SendTplSmsEnums.Status_03.getKey(), SendTplSmsEnums.Status_03.getValue());
-            result.put(SendTplSmsEnums.Reason_03.getKey(),SendTplSmsEnums.Reason_03.getValue());
+            result.put(SendTplSmsEnums.Reason_10.getKey(),SendTplSmsEnums.Reason_10.getValue());
             return result;
         }
         if(pwd==null||StringUtils.isBlank(pwd)){
             result.put(SendTplSmsEnums.Status_03.getKey(), SendTplSmsEnums.Status_03.getValue());
-            result.put(SendTplSmsEnums.Reason_03.getKey(),SendTplSmsEnums.Reason_03.getValue());
+            result.put(SendTplSmsEnums.Reason_11.getKey(),SendTplSmsEnums.Reason_11.getValue());
             return result;
         }
         result.put(Msg_Tpl_Enums.Msg_Tpl_Enums_01.getKey(),Msg_Tpl_Enums.Msg_Tpl_Enums_01.getValue());
@@ -92,22 +92,22 @@ public class Msg_Tpl_ValidateParams implements BaseValidateParams{
         String tpl_id  = StringUtils.toString(params.get("tpl_id"));
         if(sn==null||StringUtils.isBlank(sn)){
             result.put(SendTplSmsEnums.Status_03.getKey(), SendTplSmsEnums.Status_03.getValue());
-            result.put(SendTplSmsEnums.Reason_03.getKey(),SendTplSmsEnums.Reason_03.getValue());
+            result.put(SendTplSmsEnums.Reason_10.getKey(),SendTplSmsEnums.Reason_10.getValue());
             return result;
         }
         if(pwd==null||StringUtils.isBlank(pwd)){
             result.put(SendTplSmsEnums.Status_03.getKey(), SendTplSmsEnums.Status_03.getValue());
-            result.put(SendTplSmsEnums.Reason_03.getKey(),SendTplSmsEnums.Reason_03.getValue());
+            result.put(SendTplSmsEnums.Reason_11.getKey(),SendTplSmsEnums.Reason_11.getValue());
             return result;
         }
         if(tpl_id==null||StringUtils.isBlank(tpl_id)){
             result.put(SendTplSmsEnums.Status_03.getKey(), SendTplSmsEnums.Status_03.getValue());
-            result.put(SendTplSmsEnums.Reason_03.getKey(),SendTplSmsEnums.Reason_03.getValue());
+            result.put(SendTplSmsEnums.Reason_13.getKey(),SendTplSmsEnums.Reason_13.getValue());
             return result;
         }
         if(tpl_content==null||StringUtils.isBlank(tpl_content)) {
             result.put(SendTplSmsEnums.Status_03.getKey(), SendTplSmsEnums.Status_03.getValue());
-            result.put(SendTplSmsEnums.Reason_03.getKey(),SendTplSmsEnums.Reason_03.getValue());
+            result.put(SendTplSmsEnums.Reason_12.getKey(),SendTplSmsEnums.Reason_12.getValue());
             return result;
         }
         if(!Msg_Tpl_ValidateParams.regx(tpl_content)){
@@ -134,17 +134,17 @@ public class Msg_Tpl_ValidateParams implements BaseValidateParams{
         String tpl_id  = StringUtils.toString(params.get("tpl_id"));
         if(sn==null||StringUtils.isBlank(sn)){
             result.put(SendTplSmsEnums.Status_03.getKey(), SendTplSmsEnums.Status_03.getValue());
-            result.put(SendTplSmsEnums.Reason_03.getKey(),SendTplSmsEnums.Reason_03.getValue());
+            result.put(SendTplSmsEnums.Reason_10.getKey(),SendTplSmsEnums.Reason_10.getValue());
             return result;
         }
         if(pwd==null||StringUtils.isBlank(pwd)){
             result.put(SendTplSmsEnums.Status_03.getKey(), SendTplSmsEnums.Status_03.getValue());
-            result.put(SendTplSmsEnums.Reason_03.getKey(),SendTplSmsEnums.Reason_03.getValue());
+            result.put(SendTplSmsEnums.Reason_11.getKey(),SendTplSmsEnums.Reason_11.getValue());
             return result;
         }
         if(tpl_id==null||StringUtils.isBlank(tpl_id)){
             result.put(SendTplSmsEnums.Status_03.getKey(), SendTplSmsEnums.Status_03.getValue());
-            result.put(SendTplSmsEnums.Reason_03.getKey(),SendTplSmsEnums.Reason_03.getValue());
+            result.put(SendTplSmsEnums.Reason_13.getKey(),SendTplSmsEnums.Reason_13.getValue());
             return result;
         }
         result.put(Msg_Tpl_Enums.Msg_Tpl_Enums_01.getKey(),Msg_Tpl_Enums.Msg_Tpl_Enums_01.getValue());

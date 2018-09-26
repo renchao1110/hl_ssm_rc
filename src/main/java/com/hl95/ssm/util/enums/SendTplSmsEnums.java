@@ -7,6 +7,10 @@ package com.hl95.ssm.util.enums;
  * @create: 2018-09-20 13:17
  **/
 public enum SendTplSmsEnums implements BaseEnums<String>{
+    State_00("state","SUCCESS"),
+    Opinion_00("opinion","待审核"),
+    State_01("state","FALL"),
+    Opinion_01("opinion","审核不通过"),
     Status_00("status","0"),
     Status_01("status","-1"),
     Status_02("status","-2"),
@@ -28,6 +32,14 @@ public enum SendTplSmsEnums implements BaseEnums<String>{
     Reason_07("reason","stime小于当前系统时间"),
     Reason_08("reason","IP鉴权失败,请联系管理员！"),
     Reason_09("reason","短信内容与模板内容不匹配"),
+    Reason_10("reason","sn不能为空"),
+    Reason_11("reason","pwd不能为空"),
+    Reason_12("reason","tpl_content不能为空"),
+    Reason_13("reason","tpl_id不能为空"),
+    Reason_14("reason","mobile不能为空"),
+    Reason_15("reason","mobile格式不正确"),
+    Reason_16("reason","ext格式不正确"),
+    Reason_17("reason","content不能为空"),
     Reason_99("reason","其他错误")
     ;
 

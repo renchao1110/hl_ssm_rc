@@ -69,7 +69,7 @@
   </insert>
 
 
-  <insert id="saveBatchMap"  parameterType="java.util.HashMap">
+  <!--<insert id="saveBatchMap"  parameterType="java.util.HashMap">
     insert into sendtplsms (
     rrid, tpl_id, tpl_content, mobile,
     ext, stime, state,status,reason)
@@ -87,7 +87,7 @@
       #{item.reason}
       ) from daul
     </foreach>
-  </insert>
+  </insert>-->
 
 
   <delete id="deleteByrrids" parameterType="string">

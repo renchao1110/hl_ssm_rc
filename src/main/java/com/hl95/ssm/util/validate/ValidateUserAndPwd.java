@@ -26,9 +26,10 @@ public class ValidateUserAndPwd {
             session.setAttribute("user",user);
         }
             if (user != null) {
-                String temp = (String) params.get("sn") + params.get("pwd");
-                String token = DigestUtils.md5Hex(temp);
-                if (token.equals(user.getPwd())) {
+                //String temp = (String) params.get("sn") + params.get("pwd");
+                //String token = DigestUtils.md5Hex(temp);
+                String pwd = (String)params.get("pwd");
+                if (pwd.equals(user.getPwd())) {
                     return true;
                 } else {
                     return false;

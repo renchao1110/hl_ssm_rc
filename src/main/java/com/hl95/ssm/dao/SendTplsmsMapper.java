@@ -19,7 +19,7 @@ public interface SendTplsmsMapper {
 
     int saveBatch(@Param("list") List<SendTplsms> list);
 
-    int saveBatchMap(@Param("list") List<Map<String,Object> > list);
+    /*int saveBatchMap(@Param("list") List<Map<String,Object> > list);*/
 
     int deleteByrrids(List<String> rridsOk);
 

@@ -54,7 +54,7 @@ public class MybatisTest {
      *
      */
 
-    @Test
+    /*@Test
     public void testMapperDao4(){
 
         SqlSession session = sessionFactory.openSession();
@@ -108,7 +108,7 @@ public class MybatisTest {
     }
 
 
-    @Test
+    *//*@Test
     public void testMapperDao3(){
 
         SqlSession session = sessionFactory.openSession();
@@ -121,7 +121,7 @@ public class MybatisTest {
 
 
 
-    }
+    }*//*
 
     @Test
     public void testMapperDao5(){
@@ -135,7 +135,7 @@ public class MybatisTest {
     }
 
 
-    @Test
+    *//*@Test
     public void testMapperDao6(){
 
         SqlSession session = sessionFactory.openSession();
@@ -157,7 +157,7 @@ public class MybatisTest {
 
 
 
-    }
+    }*//*
 
     @Test
     public void testMapperDao7(){
@@ -207,6 +207,6 @@ public class MybatisTest {
         int i = mapper.saveBatch(l);
         session.commit();
         System.out.println(i);
-    }
+    }*/
 
 }

@@ -7,6 +7,7 @@ import com.hl95.ssm.entity.User;
 import com.hl95.ssm.service.TplMsgService;
 import com.hl95.ssm.util.enums.Msg_Tpl_Enums;
 import com.hl95.ssm.util.enums.SendTplSmsEnums;
+import com.hl95.ssm.util.resolve.ObjToMap;
 import com.hl95.ssm.util.resolve.ParamsResolve;
 import com.hl95.ssm.util.validate.BaseValidateParams;
 import com.hl95.ssm.util.validate.Msg_Tpl_ValidateParams;
@@ -48,15 +49,14 @@ public class TplMsgServiceImpl implements TplMsgService {
         if (SUCCESS.equals(validateResult.get(REASON))){
             User user = userMapper.findUserBySnid((String) params.get("sn"));
             if(user!=null){
-                String temp = (String)params.get("sn")+params.get("pwd");
-                String token = DigestUtils.md5Hex(temp);
+                String pwd = (String)params.get("pwd");
                 String tpl_content = (String) params.get("tpl_content");
-                if (token.equals(user.getPwd())){
+                if (pwd.equals(user.getPwd())){
                     HttpSession session = request.getSession();
                     if(session.getAttribute("user")==null){
                         session.setAttribute("user",user);
                     }
-                    if (Msg_Tpl_ValidateParams.regx(tpl_content)){
+                    /*if (Msg_Tpl_ValidateParams.regx(tpl_content)){
                         result.put(SendTplSmsEnums.Status_00.getKey(),SendTplSmsEnums.Status_00.getValue());
                         result.put(SendTplSmsEnums.Reason_00.getKey(),SendTplSmsEnums.Reason_00.getValue());
                         result.put("tpl_content",tpl_content);
@@ -65,12 +65,16 @@ public class TplMsgServiceImpl implements TplMsgService {
                         list.add(result);
                         map.put("result",list);
                         return map;
-                    }
-                    result.put(SendTplSmsEnums.Status_05.getKey(),SendTplSmsEnums.Status_05.getValue());
-                    result.put(SendTplSmsEnums.Reason_05.getKey(),SendTplSmsEnums.Reason_05.getValue());
+                    }*/
+                    result.put(SendTplSmsEnums.Status_00.getKey(),SendTplSmsEnums.Status_00.getValue());
+                    result.put(SendTplSmsEnums.Reason_00.getKey(),SendTplSmsEnums.Reason_00.getValue());
                     result.put("tpl_content",tpl_content);
+                    result.put("state","SUCCESS");
+                    result.put("opinion","待审核");
                     msgTempletMapper.saveMsgTemplet(result);
                     result.remove("tpl_content");
+                    result.remove("state");
+                    result.remove("opinion");
                     list.add(result);
                     map.put("result",list);
                     return map;
@@ -106,9 +110,8 @@ public class TplMsgServiceImpl implements TplMsgService {
         if (SUCCESS.equals(validateResult.get(REASON))){
             User user = userMapper.findUserBySnid((String) params.get("sn"));
             if(user!=null){
-                String temp = (String)params.get("sn")+params.get("pwd");
-                String token = DigestUtils.md5Hex(temp);
-                if (token.equals(user.getPwd())){
+                String pwd = (String)params.get("pwd");
+                if (pwd.equals(user.getPwd())){
                     HttpSession session = request.getSession();
                     if(session.getAttribute("user")==null){
                         session.setAttribute("user",user);
@@ -119,10 +122,13 @@ public class TplMsgServiceImpl implements TplMsgService {
                         if (msgTemplet==null){
                             result.put(SendTplSmsEnums.Status_04.getKey(),SendTplSmsEnums.Status_04.getValue());
                             result.put(SendTplSmsEnums.Reason_04.getKey(),SendTplSmsEnums.Reason_04.getValue());
-                            map.put("result",result);
+                            list.add(result);
+                            map.put("result",list);
                             return map;
                         }else{
-                            map.put("result",msgTemplet);
+                            Map<String, Object> temp = ObjToMap.objToMap(msgTemplet);
+                            list.add(temp);
+                            map.put("result",list);
                             return map;
                         }
                     }else {
@@ -131,7 +137,9 @@ public class TplMsgServiceImpl implements TplMsgService {
                             map.put("result","没有可用模板，请先报备模板");
                             return map;
                         }
-                        map.put("result",msgTemplets);
+                        map = ObjToMap.listToMap(msgTemplets);
+                        /*list.add(result);
+                        map.put("result",list);*/
                         return map;
                     }
                 }else {
@@ -164,9 +172,10 @@ public class TplMsgServiceImpl implements TplMsgService {
         if (SUCCESS.equals(validateResult.get(REASON))){
             User user = userMapper.findUserBySnid((String) params.get("sn"));
             if(user!=null){
-                String temp = (String)params.get("sn")+params.get("pwd");
-                String token = DigestUtils.md5Hex(temp);
-                if (token.equals(user.getPwd())){
+                /*String temp = (String)params.get("sn")+params.get("pwd");
+                String token = DigestUtils.md5Hex(temp);*/
+                String pwd = (String)params.get("pwd");
+                if (pwd.equals(user.getPwd())){
                     HttpSession session = request.getSession();
                     if(session.getAttribute("user")==null){
                         session.setAttribute("user",user);
@@ -178,9 +187,14 @@ public class TplMsgServiceImpl implements TplMsgService {
                         temps.put("tpl_content",params.get("tpl_content"));
                         temps.put(SendTplSmsEnums.Status_00.getKey(),SendTplSmsEnums.Status_00.getValue());
                         temps.put(SendTplSmsEnums.Reason_00.getKey(),SendTplSmsEnums.Reason_00.getValue());
+                        temps.put(SendTplSmsEnums.State_00.getKey(),SendTplSmsEnums.State_00.getValue());
+                        temps.put(SendTplSmsEnums.Opinion_00.getKey(),SendTplSmsEnums.Opinion_00.getValue());
                         int i = msgTempletMapper.updateByParams(temps);
                         if (i==1){
+                            //map = ObjToMap.resolveMap(temps);
                             temps.remove("tpl_content");
+                            temps.remove("state");
+                            temps.remove("opinion");
                             list.add(temps);
                             map.put("result",list);
                             return map;
@@ -222,9 +236,8 @@ public class TplMsgServiceImpl implements TplMsgService {
         if (SUCCESS.equals(validateResult.get(REASON))){
             User user = userMapper.findUserBySnid((String) params.get("sn"));
             if(user!=null){
-                String temp = (String)params.get("sn")+params.get("pwd");
-                String token = DigestUtils.md5Hex(temp);
-                if (token.equals(user.getPwd())){
+                String pwd = (String)params.get("pwd");
+                if (pwd.equals(user.getPwd())){
                     HttpSession session = request.getSession();
                     if(session.getAttribute("user")==null){
                         session.setAttribute("user",user);

@@ -1,11 +1,8 @@
 package com.hl95.ssm.util.validate;
 
 import com.hl95.ssm.dao.MsgTempletMapper;
-import com.hl95.ssm.dao.SendTplSmsResultMapper;
-import com.hl95.ssm.dao.SendTplsmsMapper;
 import com.hl95.ssm.entity.MsgTemplet;
 import com.hl95.ssm.util.StringUtils;
-import com.hl95.ssm.util.enums.Msg_Tpl_Enums;
 import com.hl95.ssm.util.enums.SendTplSmsEnums;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,14 +18,14 @@ import java.util.regex.Pattern;
  * @program: hl_ssm_rc
  * @description: 校验模板短信下发参数
  * @author: renchao
- * @create: 2018-09-21 09:40
+ * @create: 2018-09-26 09:40
   **/
 @Component
-public class ValidateSendTplSmsParams {
+public class ValidateSendSmsParams {
     @Autowired
     protected  MsgTempletMapper msgTempletMapper;
     private static final Pattern p = Pattern.compile("[0-9]{1,}");
-    public Map<String,Object> validateSendTplSmsParams(Map<String,Object> params){
+    public Map<String,Object> validateSendSmsParams(Map<String,Object> params){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Map<String,Object> result = new HashMap<String,Object>(16);
         //企业ID
@@ -37,15 +34,13 @@ public class ValidateSendTplSmsParams {
         String pwd  = StringUtils.toString(params.get("pwd"));
         //电话号码
         String mobile  = StringUtils.toString(params.get("mobile"));
-        //模板ID
-        String tpl_id  = StringUtils.toString(params.get("tpl_id"));
         //短信内容
-        String tpl_content = StringUtils.toString(params.get("tpl_content"));
+        String content = StringUtils.toString(params.get("content"));
         //非必填，用户扩展码
         String ext  = StringUtils.toString(params.get("ext"));
-        //定时发送时间
+        //非必填，定时发送时间
         String stime = StringUtils.toString(params.get("stime"));
-        //唯一标识
+        //非必填，唯一标识
         String rrid = StringUtils.toString(params.get("rrid"));
         if(sn==null||StringUtils.isBlank(sn)){
             result.put(SendTplSmsEnums.Status_03.getKey(), SendTplSmsEnums.Status_03.getValue());
@@ -62,6 +57,7 @@ public class ValidateSendTplSmsParams {
             result.put(SendTplSmsEnums.Reason_14.getKey(),SendTplSmsEnums.Reason_14.getValue());
             return result;
         }
+
         //验证手机号格式
         if (mobile.contains(",")){
             String[] strs = mobile.split(",");
@@ -89,34 +85,12 @@ public class ValidateSendTplSmsParams {
                 return result;
             }
         }
-        if(tpl_content==null||StringUtils.isBlank(tpl_content)) {
+        if(content==null||StringUtils.isBlank(content)) {
             result.put(SendTplSmsEnums.Status_03.getKey(), SendTplSmsEnums.Status_03.getValue());
-            result.put(SendTplSmsEnums.Reason_12.getKey(),SendTplSmsEnums.Reason_12.getValue());
+            result.put(SendTplSmsEnums.Reason_17.getKey(),SendTplSmsEnums.Reason_17.getValue());
             return result;
         }
-        if(tpl_id==null||StringUtils.isBlank(tpl_id)){
-            result.put(SendTplSmsEnums.Status_03.getKey(), SendTplSmsEnums.Status_03.getValue());
-            result.put(SendTplSmsEnums.Reason_13.getKey(),SendTplSmsEnums.Reason_13.getValue());
-            return result;
-        }else {
-            MsgTemplet msgTemplet = msgTempletMapper.selectByPrimaryKey(tpl_id);
-            if (msgTemplet==null){
-                result.put(SendTplSmsEnums.Status_04.getKey(), SendTplSmsEnums.Status_04.getValue());
-                result.put(SendTplSmsEnums.Reason_04.getKey(),SendTplSmsEnums.Reason_04.getValue());
-                return result;
-            }
-            String[] temps = msgTemplet.getTpl_content().split("\\{n\\}");
-            for (String sms:temps){
-                if (!tpl_content.contains(sms)){
-                    result.put(SendTplSmsEnums.Status_09.getKey(), SendTplSmsEnums.Status_09.getValue());
-                    result.put(SendTplSmsEnums.Reason_09.getKey(),SendTplSmsEnums.Reason_09.getValue());
-                    result.put("tpl_content",msgTemplet.getTpl_content());
-                    return result;
-                }
-            }
-        }
-
-        if(!Msg_Tpl_ValidateParams.regx(tpl_content)){
+        if(!Msg_Tpl_ValidateParams.regx(content)){
             result.put(SendTplSmsEnums.Status_02.getKey(), SendTplSmsEnums.Status_02.getValue());
             result.put(SendTplSmsEnums.Reason_02.getKey(),SendTplSmsEnums.Reason_02.getValue());
             return result;
