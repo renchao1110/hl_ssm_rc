@@ -6,6 +6,7 @@ import com.hl95.ssm.service.UpReportService;
 import com.hl95.ssm.util.RemoteHostUtil;
 import com.hl95.ssm.util.enums.SendTplSmsEnums;
 import com.hl95.ssm.util.resolve.ParamsResolve;
+import com.hl95.ssm.util.resolve.ResolveResult;
 import com.hl95.ssm.util.validate.ValidateGetReportParams;
 import com.hl95.ssm.util.validate.ValidateUserAndPwd;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @program: hl_ssm_rc
@@ -76,8 +74,17 @@ public class UpReportServiceImpl implements UpReportService {
             return result;
         }
         List<Map<String, Object>> upReports = upReportMapper.getUpReports();
+        if (upReports.size()==0){
+            Map<String,Object> temp = new HashMap<>();
+            temp.put("status","-99");
+            temp.put("reason","当前没有可用的上行信息");
+            upReports.add(temp);
+            result.put("result",upReports);
+            return result;
+        }
         upReportMapper.updateUpReports(upReports);
-        result.put("result",upReports);
+        List<Map<String, Object>> list = ResolveResult.resolveResultMap(upReports);
+        result.put("result",list);
         return result;
     }
 }

@@ -1,6 +1,8 @@
 package com.hl95.ssm.dao;
 
 import com.hl95.ssm.entity.StateReport;
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +19,7 @@ public interface StateReportMapper {
 
     List<Map<String,Object>> getReports();
 
-    int updateReports(List<Map<String,Object>> list);
+    int updateReports(@Param("list") List<Map<String,Object>> list);
 
     int saveReport(Map<String, Object> params);
 }

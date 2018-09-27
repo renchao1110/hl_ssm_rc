@@ -7,6 +7,7 @@ import com.hl95.ssm.service.StateReportService;
 import com.hl95.ssm.util.RemoteHostUtil;
 import com.hl95.ssm.util.enums.SendTplSmsEnums;
 import com.hl95.ssm.util.resolve.ParamsResolve;
+import com.hl95.ssm.util.resolve.ResolveResult;
 import com.hl95.ssm.util.validate.ValidateGetReportParams;
 import com.hl95.ssm.util.validate.ValidateUserAndPwd;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,8 +74,17 @@ public class StateReportServiceImpl implements StateReportService {
         }
 
         List<Map<String, Object>> reports = stateReportMapper.getReports();
-        result.put("result",reports);
+        if (reports.size()==0){
+            Map<String,Object> temp = new HashMap<>();
+            temp.put("status","-99");
+            temp.put("reason","当前没有可用的状态报告");
+            reports.add(temp);
+            result.put("result",reports);
+            return result;
+        }
         stateReportMapper.updateReports(reports);
+        List<Map<String, Object>> list = ResolveResult.resolveResultMap(reports);
+        result.put("result",list);
         return result;
     }
 
