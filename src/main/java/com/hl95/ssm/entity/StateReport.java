@@ -15,13 +15,17 @@ public class StateReport {
 
     private String ffeeterminal;
 
-    private Integer fserviceupid;
+    private String fserviceupid;
 
     private String freportcode;
 
-    private Integer flinkid;
+    private String flinkid;
 
     private String fackstatus;
+
+    private String state;
+
+    private String reason;
 
     public Integer getId() {
         return id;
@@ -79,12 +83,12 @@ public class StateReport {
         this.ffeeterminal = ffeeterminal == null ? null : ffeeterminal.trim();
     }
 
-    public Integer getFserviceupid() {
+    public String getFserviceupid() {
         return fserviceupid;
     }
 
-    public void setFserviceupid(Integer fserviceupid) {
-        this.fserviceupid = fserviceupid;
+    public void setFserviceupid(String fserviceupid) {
+        this.fserviceupid = fserviceupid == null ? null : fserviceupid.trim();
     }
 
     public String getFreportcode() {
@@ -95,12 +99,12 @@ public class StateReport {
         this.freportcode = freportcode == null ? null : freportcode.trim();
     }
 
-    public Integer getFlinkid() {
+    public String getFlinkid() {
         return flinkid;
     }
 
-    public void setFlinkid(Integer flinkid) {
-        this.flinkid = flinkid;
+    public void setFlinkid(String flinkid) {
+        this.flinkid = flinkid == null ? null : flinkid.trim();
     }
 
     public String getFackstatus() {
@@ -109,5 +113,21 @@ public class StateReport {
 
     public void setFackstatus(String fackstatus) {
         this.fackstatus = fackstatus == null ? null : fackstatus.trim();
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state == null ? null : state.trim();
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason == null ? null : reason.trim();
     }
 }

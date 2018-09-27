@@ -2,6 +2,7 @@ package com.hl95.ssm.dao;
 
 import com.hl95.ssm.entity.SendTplSmsResult;
 import java.util.List;
+import java.util.Map;
 
 public interface SendTplSmsResultMapper {
     int deleteByPrimaryKey(String rrid);
@@ -17,4 +18,6 @@ public interface SendTplSmsResultMapper {
     int saveBatch(List<String> rrids);
 
     int saveOne(String rrids);
+
+    int updateByRrid(Map<String,Object> params);
 }

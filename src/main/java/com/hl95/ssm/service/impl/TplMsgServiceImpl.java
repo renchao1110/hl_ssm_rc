@@ -69,8 +69,8 @@ public class TplMsgServiceImpl implements TplMsgService {
                     result.put(SendTplSmsEnums.Status_00.getKey(),SendTplSmsEnums.Status_00.getValue());
                     result.put(SendTplSmsEnums.Reason_00.getKey(),SendTplSmsEnums.Reason_00.getValue());
                     result.put("tpl_content",tpl_content);
-                    result.put("state","SUCCESS");
-                    result.put("opinion","待审核");
+                    result.put(SendTplSmsEnums.State_02.getKey(),SendTplSmsEnums.State_02.getValue());
+                    result.put(SendTplSmsEnums.Opinion_02.getKey(),SendTplSmsEnums.Opinion_02.getValue());
                     msgTempletMapper.saveMsgTemplet(result);
                     result.remove("tpl_content");
                     result.remove("state");
@@ -187,8 +187,8 @@ public class TplMsgServiceImpl implements TplMsgService {
                         temps.put("tpl_content",params.get("tpl_content"));
                         temps.put(SendTplSmsEnums.Status_00.getKey(),SendTplSmsEnums.Status_00.getValue());
                         temps.put(SendTplSmsEnums.Reason_00.getKey(),SendTplSmsEnums.Reason_00.getValue());
-                        temps.put(SendTplSmsEnums.State_00.getKey(),SendTplSmsEnums.State_00.getValue());
-                        temps.put(SendTplSmsEnums.Opinion_00.getKey(),SendTplSmsEnums.Opinion_00.getValue());
+                        temps.put(SendTplSmsEnums.State_02.getKey(),SendTplSmsEnums.State_02.getValue());
+                        temps.put(SendTplSmsEnums.Opinion_02.getKey(),SendTplSmsEnums.Opinion_02.getValue());
                         int i = msgTempletMapper.updateByParams(temps);
                         if (i==1){
                             //map = ObjToMap.resolveMap(temps);

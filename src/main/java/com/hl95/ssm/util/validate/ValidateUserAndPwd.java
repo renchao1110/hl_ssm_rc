@@ -21,10 +21,13 @@ public class ValidateUserAndPwd {
     private UserMapper userMapper;
     public  boolean validateUserAndPwd(Map<String,Object> params, HttpSession session) {
         User user = (User)session.getAttribute("user");
+        //向session中保存当前用户信息，后面方法会从session中获取用户信息
         if (user==null){
             user = userMapper.findUserBySnid((String) params.get("sn"));
             session.setAttribute("user",user);
         }
+        //为了验证每次用户访问参数是否正确，每次再从数据库重新查询
+        user = userMapper.findUserBySnid((String) params.get("sn"));
             if (user != null) {
                 //String temp = (String) params.get("sn") + params.get("pwd");
                 //String token = DigestUtils.md5Hex(temp);

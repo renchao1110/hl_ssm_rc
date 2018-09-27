@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hl95.ssm.dao.UpReportMapper">
+  <resultMap id="BaseResultMap" type="com.hl95.ssm.entity.UpReport">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="msgContent" jdbcType="VARCHAR" property="msgcontent" />
+    <result column="spNumber" jdbcType="VARCHAR" property="spnumber" />
+    <result column="linkid" jdbcType="VARCHAR" property="linkid" />
+    <result column="serviceup" jdbcType="VARCHAR" property="serviceup" />
+    <result column="datetime" jdbcType="VARCHAR" property="datetime" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from upreport
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.hl95.ssm.entity.UpReport">
+    insert into upreport (id, phone, msgContent, 
+      spNumber, linkid, serviceup,datetime,state
+      )
+    values (#{id,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{msgcontent,jdbcType=VARCHAR}, 
+      #{spnumber,jdbcType=VARCHAR}, #{linkid,jdbcType=VARCHAR}, #{serviceup,jdbcType=VARCHAR}, #{datetime,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.hl95.ssm.entity.UpReport">
+    update upreport
+    set phone = #{phone,jdbcType=VARCHAR},
+      msgContent = #{msgcontent,jdbcType=VARCHAR},
+      spNumber = #{spnumber,jdbcType=VARCHAR},
+      linkid = #{linkid,jdbcType=VARCHAR},
+      serviceup = #{serviceup,jdbcType=VARCHAR},
+      datetime = #{datetime,jdbcType=VARCHAR},
+      state = #{state,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select id, phone, msgContent, spNumber, linkid, serviceup,datetime,state
+    from upreport
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, phone, msgContent, spNumber, linkid, serviceup,datetime,state
+    from upreport
+  </select>
+
+
+  <insert id="saveUpReport" parameterType="com.hl95.ssm.entity.UpReport">
+    insert into upreport (id, phone, msgContent,
+      spNumber, linkid, serviceup,datetime,state
+      )
+    values (
+    (select replace(UUID(),'-','')),
+    #{phone,jdbcType=VARCHAR},
+    #{msgContent,jdbcType=VARCHAR},
+    #{spNumber,jdbcType=VARCHAR},
+    #{linkid,jdbcType=VARCHAR},
+    #{serviceup,jdbcType=VARCHAR},
+    #{datetime,jdbcType=VARCHAR},
+    #{state,jdbcType=VARCHAR}
+      )
+  </insert>
+
+
+  <resultMap id="ResultMap" type="java.util.Map">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="phone" jdbcType="VARCHAR" property="mobile" />
+    <result column="msgContent" jdbcType="VARCHAR" property="content" />
+    <result column="spNumber" jdbcType="VARCHAR" property="ext" />
+    <result column="datetime" jdbcType="VARCHAR" property="datetime" />
+    <result column="linkid" jdbcType="VARCHAR" property="linkid" />
+    <result column="serviceup" jdbcType="VARCHAR" property="serviceup" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+  </resultMap>
+  <select id="getUpReports" parameterType="java.lang.String" resultMap="ResultMap">
+    select id, phone, msgContent, spNumber,datetime
+    from upreport
+    where state = '0' limit 50
+  </select>
+
+  <update id="updateUpReports" parameterType="list">
+    update upreport
+    set
+    state = '1'
+    where id in (
+    <if test="list==null or list.size==0">
+      ''
+    </if>
+    <foreach collection="list"  separator="," index="index" item="item">
+      #{item.id}
+    </foreach>
+    )
+  </update>
+</mapper>

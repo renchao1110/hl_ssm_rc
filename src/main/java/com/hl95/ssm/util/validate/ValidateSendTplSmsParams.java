@@ -105,6 +105,16 @@ public class ValidateSendTplSmsParams {
                 result.put(SendTplSmsEnums.Reason_04.getKey(),SendTplSmsEnums.Reason_04.getValue());
                 return result;
             }
+            if ("FALL".equals(msgTemplet.getState())){
+                result.put(SendTplSmsEnums.State_01.getKey(), SendTplSmsEnums.State_01.getValue());
+                result.put(SendTplSmsEnums.Opinion_01.getKey(),SendTplSmsEnums.Opinion_01.getValue());
+                return result;
+            }
+            if ("CHECK".equals(msgTemplet.getState())){
+                result.put(SendTplSmsEnums.State_02.getKey(), SendTplSmsEnums.State_02.getValue());
+                result.put(SendTplSmsEnums.Opinion_02.getKey(),SendTplSmsEnums.Opinion_02.getValue());
+                return result;
+            }
             String[] temps = msgTemplet.getTpl_content().split("\\{n\\}");
             for (String sms:temps){
                 if (!tpl_content.contains(sms)){

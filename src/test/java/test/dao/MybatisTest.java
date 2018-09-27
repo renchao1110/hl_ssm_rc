@@ -209,4 +209,38 @@ public class MybatisTest {
         System.out.println(i);
     }*/
 
+    @Test
+    public void testMapperDao3(){
+
+        SqlSession session = sessionFactory.openSession();
+        StateReportMapper mapper = session.getMapper(StateReportMapper.class);
+        List<Map<String,Object>> reports = mapper.getReports();
+
+        List<String> list = new ArrayList<>();
+        list.size();
+        for (Map sms:reports){
+            System.out.println(sms);
+        }
+        int i = mapper.updateReports(reports);
+        System.out.println(i);
+        session.commit();
+
+
+
+    }
+
+    @Test
+    public void updateReports(){
+
+        SqlSession session = sessionFactory.openSession();
+        StateReportMapper mapper = session.getMapper(StateReportMapper.class);
+        List<Map<String,Object>> reports = mapper.getReports();
+        for (Map sms:reports){
+            System.out.println(sms);
+        }
+
+
+
+    }
+
 }

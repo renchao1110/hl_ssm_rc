@@ -29,12 +29,12 @@ public class ValidateGetReportParams {
         String pwd  = StringUtils.toString(params.get("pwd"));
         if(sn==null||StringUtils.isBlank(sn)){
             result.put(SendTplSmsEnums.Status_03.getKey(), SendTplSmsEnums.Status_03.getValue());
-            result.put(SendTplSmsEnums.Reason_03.getKey(),SendTplSmsEnums.Reason_03.getValue()+":sn不能为空");
+            result.put(SendTplSmsEnums.Reason_10.getKey(),SendTplSmsEnums.Reason_10.getValue()+":sn不能为空");
             return result;
         }
         if(pwd==null||StringUtils.isBlank(pwd)){
             result.put(SendTplSmsEnums.Status_03.getKey(), SendTplSmsEnums.Status_03.getValue());
-            result.put(SendTplSmsEnums.Reason_03.getKey(),SendTplSmsEnums.Reason_03.getValue()+":pwd不能为空");
+            result.put(SendTplSmsEnums.Reason_11.getKey(),SendTplSmsEnums.Reason_11.getValue()+":pwd不能为空");
             return result;
         }
         result.put(SendTplSmsEnums.Status_00.getKey(),SendTplSmsEnums.Status_00.getValue());

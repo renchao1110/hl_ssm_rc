@@ -7,10 +7,13 @@ package com.hl95.ssm.util.enums;
  * @create: 2018-09-20 13:17
  **/
 public enum SendTplSmsEnums implements BaseEnums<String>{
+
     State_00("state","SUCCESS"),
-    Opinion_00("opinion","待审核"),
+    Opinion_00("opinion","审核通过"),
     State_01("state","FALL"),
     Opinion_01("opinion","审核不通过"),
+    State_02("state","CHECK"),
+    Opinion_02("opinion","待审核"),
     Status_00("status","0"),
     Status_01("status","-1"),
     Status_02("status","-2"),

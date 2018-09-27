@@ -2,6 +2,7 @@ package com.hl95.ssm.dao;
 
 import com.hl95.ssm.entity.StateReport;
 import java.util.List;
+import java.util.Map;
 
 public interface StateReportMapper {
     int deleteByPrimaryKey(Integer id);
@@ -13,4 +14,10 @@ public interface StateReportMapper {
     List<StateReport> selectAll();
 
     int updateByPrimaryKey(StateReport record);
+
+    List<Map<String,Object>> getReports();
+
+    int updateReports(List<Map<String,Object>> list);
+
+    int saveReport(Map<String, Object> params);
 }

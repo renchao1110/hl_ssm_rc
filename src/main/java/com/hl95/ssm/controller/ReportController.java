@@ -22,7 +22,15 @@ public class ReportController {
     private StateReportService stateReportService;
     @RequestMapping(value = "/getreport",method = RequestMethod.POST)
     @ResponseBody
-    public Map<String,Object> sendTplSms(HttpServletRequest request){
+    public Map<String,Object> getReport(HttpServletRequest request){
         return stateReportService.getStateReport(request);
+    }
+
+
+
+    @RequestMapping(value = "/receivereport",method = RequestMethod.POST)
+    @ResponseBody
+    public int receiveReport(HttpServletRequest request){
+        return stateReportService.saveReport(request);
     }
 }

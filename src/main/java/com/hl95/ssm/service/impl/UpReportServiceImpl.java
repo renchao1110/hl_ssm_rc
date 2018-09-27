@@ -1,9 +1,8 @@
 package com.hl95.ssm.service.impl;
 
 import com.hl95.ssm.dao.AddressMapper;
-import com.hl95.ssm.dao.SendTplSmsResultMapper;
-import com.hl95.ssm.dao.StateReportMapper;
-import com.hl95.ssm.service.StateReportService;
+import com.hl95.ssm.dao.UpReportMapper;
+import com.hl95.ssm.service.UpReportService;
 import com.hl95.ssm.util.RemoteHostUtil;
 import com.hl95.ssm.util.enums.SendTplSmsEnums;
 import com.hl95.ssm.util.resolve.ParamsResolve;
@@ -13,41 +12,46 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
  * @program: hl_ssm_rc
- * @description: 获取状态报告的业务实现
+ * @description: 短信上行具体业务的实现
  * @author: renchao
- * @create: 2018-09-26 15:39
+ * @create: 2018-09-27 13:45
  **/
 @Service
-public class StateReportServiceImpl implements StateReportService {
+public class UpReportServiceImpl implements UpReportService {
     private static final String SUCCESS = "0";
     private static final String STATUS = "status";
     private static final String REASON = "成功";
+    @Autowired
+    private UpReportMapper upReportMapper;
     @Autowired
     private AddressMapper addressMapper;
     @Autowired
     private ValidateGetReportParams validateSendTplSmsParams;
     @Autowired
     private ValidateUserAndPwd validateUserAndPwd;
-    @Autowired
-    private StateReportMapper stateReportMapper;
-
-    @Autowired
-    private SendTplSmsResultMapper sendTplSmsResultMapper;
-
-    /**
-     * 客户获取状态报告的接口
-     * @param request
-     * @return
-     */
+    private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     @Override
-    public Map<String, Object> getStateReport(HttpServletRequest request) {
+    public int saveUpReport(HttpServletRequest request) {
+        //1.获取请求参数。
+        Map<String, Object> params = ParamsResolve.getParams(request);
+        Date now = new Date();
+        String datetime = sdf.format(now);
+        params.put("datetime",datetime);
+        params.put("state","0");
+        int i = upReportMapper.saveUpReport(params);
+        return i;
+    }
+
+    @Override
+    public Map<String, Object> getUpReport(HttpServletRequest request) {
         Map<String,Object> result = new HashMap<String,Object>(16);
         //1.获取请求参数。
         Map<String, Object> params = ParamsResolve.getParams(request);
@@ -71,41 +75,9 @@ public class StateReportServiceImpl implements StateReportService {
             result.put(SendTplSmsEnums.Reason_01.getKey(),SendTplSmsEnums.Reason_01.getValue());
             return result;
         }
-
-        List<Map<String, Object>> reports = stateReportMapper.getReports();
-        result.put("result",reports);
-        stateReportMapper.updateReports(reports);
+        List<Map<String, Object>> upReports = upReportMapper.getUpReports();
+        upReportMapper.updateUpReports(upReports);
+        result.put("result",upReports);
         return result;
-    }
-
-    /**
-     * 接收状态报告并根据状态报告FLinkID更新短信下发状态
-     * @param request
-     * @return
-     */
-    @Override
-    public int saveReport(HttpServletRequest request) {
-        //1.获取请求参数。
-        Map<String, Object> params = ParamsResolve.getParams(request);
-        //首次保存添加默认值
-        params.put("state","0");
-        params.put("reason",REASON);
-        //保存状态报告
-        int i = stateReportMapper.saveReport(params);
-        //更新短信下发状态
-        String rrid = (String) params.get("FLinkID");
-        if (i==1&&rrid!=null&&!"".equals(rrid)){
-            Map<String,Object> map = new HashMap<>();
-            map.put("rrid",rrid);
-            map.put("state",params.get("FReportCode"));
-            map.put("stime",params.get("FSubmitTime"));
-            if ("DELIVRD".equals((String)params.get("FReportCode"))||"0".equals((String)params.get("FReportCode"))){
-                map.put("reason","短信下发成功");
-            }else {
-                map.put("reason","短信下发失败");
-            }
-            sendTplSmsResultMapper.updateByRrid(map);
-        }
-        return i;
     }
 }

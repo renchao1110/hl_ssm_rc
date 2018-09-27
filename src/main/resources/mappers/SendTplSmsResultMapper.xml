@@ -61,4 +61,21 @@
     insert into sendtplsms_result (select * from sendtplsms s
     where s.rrid = #{rrid}
   </insert>
+
+
+  <update id="updateByRrid" parameterType="map">
+    update sendtplsms_result
+    <set>
+      <if test="state!=null and state!='' ">
+        state = #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="reason!=null and reason!='' ">
+        reason = #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="stime!=null and stime!='' ">
+        stime = #{stime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where rrid = #{rrid,jdbcType=VARCHAR}
+  </update>
 </mapper>
