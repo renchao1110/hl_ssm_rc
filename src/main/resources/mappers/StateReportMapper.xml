@@ -110,7 +110,7 @@
     (select replace(UUID(),'-','')),
     #{PlatForm,jdbcType=VARCHAR},
     #{FUnikey,jdbcType=VARCHAR},
-    #{FOrgAddr,jdbcType=VARCHAR},
+    (substring(#{FOrgAddr,jdbcType=VARCHAR},14)),
     #{FDestAddr,jdbcType=VARCHAR},
     #{FSubmitTime,jdbcType=VARCHAR},
     #{FFeeTerminal,jdbcType=VARCHAR},

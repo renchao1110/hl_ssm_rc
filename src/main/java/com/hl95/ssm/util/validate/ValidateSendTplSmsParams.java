@@ -7,6 +7,7 @@ import com.hl95.ssm.entity.MsgTemplet;
 import com.hl95.ssm.util.StringUtils;
 import com.hl95.ssm.util.enums.Msg_Tpl_Enums;
 import com.hl95.ssm.util.enums.SendTplSmsEnums;
+import com.hl95.ssm.util.resolve.ResolveTplParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -115,7 +116,7 @@ public class ValidateSendTplSmsParams {
                 result.put(SendTplSmsEnums.Opinion_02.getKey(),SendTplSmsEnums.Opinion_02.getValue());
                 return result;
             }
-            String[] temps = msgTemplet.getTpl_content().split("\\{n\\}");
+            /*String[] temps = msgTemplet.getTpl_content().split("\\{n\\}");
             for (String sms:temps){
                 if (!tpl_content.contains(sms)){
                     result.put(SendTplSmsEnums.Status_09.getKey(), SendTplSmsEnums.Status_09.getValue());
@@ -123,6 +124,15 @@ public class ValidateSendTplSmsParams {
                     result.put("tpl_content",msgTemplet.getTpl_content());
                     return result;
                 }
+            }*/
+            tpl_content = ResolveTplParam.getTplSms(msgTemplet.getTpl_content(), tpl_content);
+            if ("".equals(tpl_content)){
+                result.put(SendTplSmsEnums.Status_09.getKey(), SendTplSmsEnums.Status_09.getValue());
+                result.put(SendTplSmsEnums.Reason_09.getKey(),SendTplSmsEnums.Reason_09.getValue());
+                result.put("tpl_content",msgTemplet.getTpl_content());
+                return result;
+            }else {
+                params.put("tpl_content",tpl_content);
             }
         }
 
