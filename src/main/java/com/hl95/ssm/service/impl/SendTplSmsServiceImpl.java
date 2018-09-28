@@ -61,14 +61,7 @@ public class SendTplSmsServiceImpl implements SendTplSmsService {
     public Map<String, Object> sendTplSms(HttpServletRequest request) {
         List<Object> l = new ArrayList<>();
         Map<String,Object> result = new HashMap<String,Object>(16);
-        //1.获取请求参数。
-        Map<String, Object> params = ParamsResolve.getParams(request);
-        //2.参数校验
-        Map<String, Object> resultMap = validateSendTplSmsParams.validateSendTplSmsParams(params);
-        if (!SUCCESS.equals(resultMap.get(STATUS))){
-            return resultMap;
-        }
-        //3.ip鉴权
+        //1.ip鉴权
         String host = RemoteHostUtil.getRemoteHost(request);
         int countIp = addressMapper.getCountIp(host);
         if (countIp==0){
@@ -77,11 +70,18 @@ public class SendTplSmsServiceImpl implements SendTplSmsService {
             result.put("ERROR IP",host);
             return result;
         }
-        //4.用户校验
+        //2.获取请求参数。
+        Map<String, Object> params = ParamsResolve.getParams(request);
+        //3.用户校验
         if (!validateUserAndPwd.validateUserAndPwd(params,request.getSession())){
             result.put(SendTplSmsEnums.Status_01.getKey(), SendTplSmsEnums.Status_01.getValue());
             result.put(SendTplSmsEnums.Reason_01.getKey(),SendTplSmsEnums.Reason_01.getValue());
             return result;
+        }
+        //4.参数校验
+        Map<String, Object> resultMap = validateSendTplSmsParams.validateSendTplSmsParams(params);
+        if (!SUCCESS.equals(resultMap.get(STATUS))){
+            return resultMap;
         }
         //5.解析并封装要保存的参数
         List<SendTplsms> sendTplsms = ResolveSmsMsg.resolveSms(params);
@@ -89,77 +89,69 @@ public class SendTplSmsServiceImpl implements SendTplSmsService {
         definition.setIsolationLevel(TransactionDefinition.ISOLATION_READ_COMMITTED);
         definition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
         TransactionStatus satus = ptm.getTransaction(definition);*/
-        //if (sendTplsms.size()>1){
-            try {
-                sendTplsmsMapper.saveBatch(sendTplsms);
-                String stime = "";
-                //ptm.commit(satus);
-                List<String> rridsOk = new ArrayList<>();
-                List<String> rridsError = new ArrayList<>();
-                for (SendTplsms s:sendTplsms){
-                    Map<String,Object> tempMap = new HashMap<String,Object>(16);
-                    tempMap.put("rrid",s.getRrid());
-                    tempMap.put("status",s.getStatus());
-                    tempMap.put("reason",s.getReason());
-                    l.add(tempMap);
-                    stime = s.getStime();
+        try {
+            sendTplsmsMapper.saveBatch(sendTplsms);
+            String stime = (String) params.get("stime");
+            List<String> rridsOk = new ArrayList<>();
+            List<String> rridsError = new ArrayList<>();
+            if (stime!=null&&!"".equals(stime)){
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                try {
+                    Date date = sdf.parse(stime);
+                    HttpSession session = request.getSession();
+                    //定时执行短信发送任务
+                    SendTplSmsTimerTask task = new SendTplSmsTimerTask(session,sendTplsms,sendTplsmsMapper,sendTplSmsResultMapper);
+                    new ScheduledThreadPoolExecutor(1).schedule(task,date.getTime()-System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+                    //new Timer().schedule(task,date);
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
                 }
-
-                if (stime!=null&&!"".equals(stime)){
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    try {
-                        Date date = sdf.parse(stime);
-                        HttpSession session = request.getSession();
-                        //定时执行短信发送任务
-                        SendTplSmsTimerTask task = new SendTplSmsTimerTask(session,sendTplsms,sendTplsmsMapper,sendTplSmsResultMapper);
-                        new ScheduledThreadPoolExecutor(1).schedule(task,date.getTime()-System.currentTimeMillis(), TimeUnit.MILLISECONDS);
-                        //new Timer().schedule(task,date);
-
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                }else {
-                    Map<String, String> map = sendTplSmsPost.sendBatchTplSms(request.getSession(true), sendTplsms);
-                    //根据返回信息更新数据库信息
-                    for (Map.Entry<String,String> entry:map.entrySet()){
-                        String rrid  = entry.getKey();
-                        String status  = entry.getValue();
-                        if ("00".equals(status)){
-                            rridsOk.add(rrid);
-                        }else {
-                            rridsError.add(rrid);
-                        }
+            }else {
+                Map<String, String> map = sendTplSmsPost.sendBatchTplSms(request.getSession(true), sendTplsms);
+                //根据返回信息更新数据库信息
+                for (Map.Entry<String,String> entry:map.entrySet()){
+                    String rrid  = entry.getKey();
+                    String status  = entry.getValue();
+                    if ("00".equals(status)){
+                        Map<String,Object> tempMap = new HashMap<String,Object>(16);
+                        tempMap.put("rrid",rrid);
+                        tempMap.put("status",status);
+                        tempMap.put("reason","成功");
+                        l.add(tempMap);
+                        rridsOk.add(rrid);
+                    }else {
+                        Map<String,Object> tempMap = new HashMap<String,Object>(16);
+                        tempMap.put("rrid",rrid);
+                        tempMap.put("status",status);
+                        tempMap.put("reason","提交失败");
+                        l.add(tempMap);
+                        rridsError.add(rrid);
                     }
                 }
-                if (rridsOk.size()!=0){
-                    try {
-                        sendTplSmsResultMapper.saveBatch(rridsOk);
-                        sendTplsmsMapper.deleteByrrids(rridsOk);
-                        //ptm.commit(satus);
-                    }catch (Exception e){
-                        e.printStackTrace();
-                        //ptm.rollback(satus);
-                    }
-
-                }
-                if (rridsError.size()!=0){
-                    sendTplsmsMapper.updateByError(rridsError);
-                }
-                result.put("result",l);
-                //ptm.commit(satus);
-                return result;
-            }catch (Exception e){
-                //ptm.rollback(satus);
-                for (SendTplsms s:sendTplsms){
-                    Map<String,Object> tempMap = new HashMap<String,Object>(16);
-                    tempMap.put("rrid",s.getRrid());
-                    tempMap.put("status","-1");
-                    tempMap.put("reason","提交失败");
-                    l.add(tempMap);
-                }
-                result.put("result",l);
-                e.printStackTrace();
             }
+            if (rridsOk.size()!=0){
+                sendTplSmsResultMapper.saveBatch(rridsOk);
+                sendTplsmsMapper.deleteByrrids(rridsOk);
+            }
+            if (rridsError.size()!=0){
+                sendTplsmsMapper.updateByError(rridsError);
+            }
+            result.put("result",l);
+            //ptm.commit(satus);
+            return result;
+        }catch (Exception e){
+            //ptm.rollback(satus);
+            for (SendTplsms s:sendTplsms){
+                Map<String,Object> tempMap = new HashMap<String,Object>(16);
+                tempMap.put("rrid",s.getRrid());
+                tempMap.put("status","-1");
+                tempMap.put("reason","提交失败");
+                l.add(tempMap);
+            }
+            result.put("result",l);
+            e.printStackTrace();
+        }
         return result;
     }
 }

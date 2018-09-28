@@ -28,7 +28,7 @@ public class ResolveSmsMsg {
         String stime = StringUtils.toString(params.get("stime"));
         //唯一标识
         String rrid = StringUtils.toString(params.get("rrid"));
-        rrid = (rrid==null||"".equals(rrid)) ? UUID.randomUUID().toString().replace("-",""):rrid;
+        //rrid = (rrid==null||"".equals(rrid)) ? UUID.randomUUID().toString().replace("-",""):rrid;
         if (mobile.contains(",")){
             String[] mobiles = mobile.split(",");
             for (String phion:mobiles){
@@ -46,7 +46,7 @@ public class ResolveSmsMsg {
             }
         }else {
             SendTplsms ss = new SendTplsms();
-            ss.setRrid(rrid);
+            ss.setRrid(UUID.randomUUID().toString().replace("-",""));
             ss.setTpl_id(tpl_id);
             ss.setTpl_content(tpl_content);
             ss.setStime(stime);

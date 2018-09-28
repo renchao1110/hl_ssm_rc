@@ -52,18 +52,13 @@ public class SendSmsServiceImpl implements SendSmsService {
     private SendTplSmsResultMapper sendTplSmsResultMapper;
     @Autowired
     private SendTplSmsPost sendTplSmsPost;
+    @Autowired
+    private PlatformTransactionManager ptm;
     @Override
     public Map<String, Object> sendSms(HttpServletRequest request) {
         List<Object> l = new ArrayList<>();
         Map<String,Object> result = new HashMap<String,Object>(16);
-        //1.获取请求参数。
-        Map<String, Object> params = ParamsResolve.getParams(request);
-        //2.参数校验
-        Map<String, Object> resultMap = validateSendSmsParams.validateSendSmsParams(params);
-        if (!SUCCESS.equals(resultMap.get(STATUS))){
-            return resultMap;
-        }
-        //3.ip鉴权
+        //1.ip鉴权
         String host = RemoteHostUtil.getRemoteHost(request);
         int countIp = addressMapper.getCountIp(host);
         if (countIp==0){
@@ -72,30 +67,31 @@ public class SendSmsServiceImpl implements SendSmsService {
             result.put("ERROR IP",host);
             return result;
         }
-        //4.用户校验
+        //2.获取请求参数。
+        Map<String, Object> params = ParamsResolve.getParams(request);
+        //3.用户校验
         if (!validateUserAndPwd.validateUserAndPwd(params,request.getSession())){
             result.put(SendTplSmsEnums.Status_01.getKey(), SendTplSmsEnums.Status_01.getValue());
             result.put(SendTplSmsEnums.Reason_01.getKey(),SendTplSmsEnums.Reason_01.getValue());
             return result;
         }
+        //4.参数校验
+        Map<String, Object> resultMap = validateSendSmsParams.validateSendSmsParams(params);
+        if (!SUCCESS.equals(resultMap.get(STATUS))){
+            return resultMap;
+        }
         //5.解析并封装要保存的参数
         List<SendTplsms> sendTplsms = ResolveSms.resolveSms(params);
+        /*DefaultTransactionDefinition definition = new DefaultTransactionDefinition();
+        definition.setIsolationLevel(TransactionDefinition.ISOLATION_READ_COMMITTED);
+        definition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+        TransactionStatus satus = ptm.getTransaction(definition);*/
         try {
             //保存要发送的消息
             sendTplsmsMapper.saveBatch(sendTplsms);
             String stime = "";
             List<String> rridsOk = new ArrayList<>();
             List<String> rridsError = new ArrayList<>();
-            for (SendTplsms s:sendTplsms){
-                Map<String,Object> tempMap = new HashMap<String,Object>(16);
-                tempMap.put("rrid",s.getRrid());
-                tempMap.put("status",s.getStatus());
-                tempMap.put("reason",s.getReason());
-                l.add(tempMap);
-                stime = s.getStime();
-            }
-
-
             if (stime!=null&&!"".equals(stime)){
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 try {
@@ -115,8 +111,18 @@ public class SendSmsServiceImpl implements SendSmsService {
                     String rrid  = entry.getKey();
                     String status  = entry.getValue();
                     if ("00".equals(status)){
+                        Map<String,Object> tempMap = new HashMap<String,Object>(16);
+                        tempMap.put("rrid",rrid);
+                        tempMap.put("status",status);
+                        tempMap.put("reason","成功");
+                        l.add(tempMap);
                         rridsOk.add(rrid);
                     }else {
+                        Map<String,Object> tempMap = new HashMap<String,Object>(16);
+                        tempMap.put("rrid",rrid);
+                        tempMap.put("status",status);
+                        tempMap.put("reason","提交失败");
+                        l.add(tempMap);
                         rridsError.add(rrid);
                     }
                 }
@@ -129,9 +135,11 @@ public class SendSmsServiceImpl implements SendSmsService {
             if (rridsError.size()!=0){
                 sendTplsmsMapper.updateByError(rridsError);
             }
+            //ptm.commit(satus);
             result.put("result",l);
             return result;
         }catch (Exception e){
+            //ptm.rollback(satus);
             for (SendTplsms s:sendTplsms){
                 Map<String,Object> tempMap = new HashMap<String,Object>(16);
                 tempMap.put("rrid",s.getRrid());
