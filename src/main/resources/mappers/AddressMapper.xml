@@ -33,6 +33,6 @@
   </select>
 
   <select id="getCountIp" resultType="int">
-    select count(*) from address where #{ip,jdbcType=VARCHAR}
+    select count(*) from address where ip=#{ip,jdbcType=VARCHAR}
   </select>
 </mapper>

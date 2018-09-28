@@ -22,4 +22,29 @@ public class ResolveResult {
         }
         return list;
     }
+
+    /**
+     * 将无格式的字符串日期转换为yyyy-MM-dd HH:mm:ss
+     * @param str
+     * @return
+     */
+    public static String resolvestrToDate(String str){
+        StringBuffer sb = new StringBuffer();
+        String t1 = str.substring(0,4);
+        String t2 = str.substring(4,6);
+        String t3 = str.substring(6,8);
+        String t4 = str.substring(8,10);
+        String t5 = str.substring(10,12);
+        String t6 = str.substring(12,14);
+        String s = sb.append(t1).append("-")
+                .append(t2).append("-")
+                .append(t3)
+                .append(" ")
+                .append(t4).append(":")
+                .append(t5).append(":")
+                .append(t5).toString();
+        return s;
+    }
+
+
 }

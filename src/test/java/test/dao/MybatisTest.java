@@ -209,7 +209,7 @@ public class MybatisTest {
         System.out.println(i);
     }*/
 
-    @Test
+    /*@Test
     public void testMapperDao3(){
 
         SqlSession session = sessionFactory.openSession();
@@ -241,6 +241,6 @@ public class MybatisTest {
 
 
 
-    }
+    }*/
 
 }

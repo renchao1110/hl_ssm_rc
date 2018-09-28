@@ -100,10 +100,19 @@ public class StateReportServiceImpl implements StateReportService {
         //首次保存添加默认值
         params.put("state","0");
         params.put("reason",REASON);
+        //转化时间
+        String FSubmitTime = (String) params.get("FSubmitTime");
+        if (!FSubmitTime.contains("-")){
+            String s = ResolveResult.resolvestrToDate(FSubmitTime);
+            params.put("FSubmitTime",s);
+
+        }
         //保存状态报告
         int i = stateReportMapper.saveReport(params);
         //更新短信下发状态
         String rrid = (String) params.get("FLinkID");
+
+
         if (i==1&&rrid!=null&&!"".equals(rrid)){
             Map<String,Object> map = new HashMap<>();
             map.put("rrid",rrid);

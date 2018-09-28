@@ -71,7 +71,7 @@ public class SendTplSmsServiceImpl implements SendTplSmsService {
         //3.ip鉴权
         String host = RemoteHostUtil.getRemoteHost(request);
         int countIp = addressMapper.getCountIp(host);
-        if (countIp<=0){
+        if (countIp==0){
             result.put(SendTplSmsEnums.Status_08.getKey(), SendTplSmsEnums.Status_08.getValue());
             result.put(SendTplSmsEnums.Reason_08.getKey(),SendTplSmsEnums.Reason_08.getValue());
             result.put("ERROR IP",host);
