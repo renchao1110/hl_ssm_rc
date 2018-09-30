@@ -89,7 +89,7 @@ public class SendSmsServiceImpl implements SendSmsService {
         try {
             //保存要发送的消息
             sendTplsmsMapper.saveBatch(sendTplsms);
-            String stime = "";
+            String stime = (String) params.get("stime");
             List<String> rridsOk = new ArrayList<>();
             List<String> rridsError = new ArrayList<>();
             if (stime!=null&&!"".equals(stime)){
@@ -100,7 +100,15 @@ public class SendSmsServiceImpl implements SendSmsService {
                     //定时执行短信发送任务
                     SendTplSmsTimerTask task = new SendTplSmsTimerTask(session,sendTplsms,sendTplsmsMapper,sendTplSmsResultMapper);
                     new ScheduledThreadPoolExecutor(1).schedule(task,date.getTime()-System.currentTimeMillis(), TimeUnit.MILLISECONDS);
-
+                    for (SendTplsms tplsms:sendTplsms){
+                        Map<String,Object> tempMap = new HashMap<String,Object>(16);
+                        tempMap.put("rrid",tplsms.getRrid());
+                        tempMap.put("status","00");
+                        tempMap.put("reason","成功");
+                        l.add(tempMap);
+                    }
+                    result.put("result",l);
+                    return result;
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }

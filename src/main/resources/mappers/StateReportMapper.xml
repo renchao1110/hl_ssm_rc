@@ -100,14 +100,18 @@
 
 
 
-  <insert id="saveReport" parameterType="map">
+  <insert id="saveReport" parameterType="map" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    <selectKey statementType="CALLABLE" keyProperty="id" resultType="string" order="BEFORE">
+      select replace(uuid(),'-','') as id from dual
+    </selectKey>
     insert into statereport (id, PlatForm, FUnikey,
       FOrgAddr, FDestAddr, FSubmitTime,
       FFeeTerminal, FServiceUPID, FReportCode,
       FLinkID, FAckStatus, state,
       reason)
     values (
-    (select replace(UUID(),'-','')),
+    /*(select replace(UUID(),'-',''))*/
+    #{id,jdbcType=VARCHAR},
     #{PlatForm,jdbcType=VARCHAR},
     #{FUnikey,jdbcType=VARCHAR},
     (substring(#{FOrgAddr,jdbcType=VARCHAR},14)),
@@ -121,4 +125,12 @@
     #{state,jdbcType=VARCHAR},
     #{reason,jdbcType=VARCHAR})
   </insert>
+
+
+  <update id="updateById" parameterType="map">
+    update statereport
+    set
+    state = '1'
+    where id = #{id}
+  </update>
 </mapper>

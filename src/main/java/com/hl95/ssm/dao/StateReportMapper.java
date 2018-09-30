@@ -22,4 +22,6 @@ public interface StateReportMapper {
     int updateReports(@Param("list") List<Map<String,Object>> list);
 
     int saveReport(Map<String, Object> params);
+
+    int updateById(Map<String, Object> params);
 }

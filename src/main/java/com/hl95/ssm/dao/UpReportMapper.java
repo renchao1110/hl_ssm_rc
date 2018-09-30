@@ -20,4 +20,6 @@ public interface UpReportMapper {
     List<Map<String,Object>> getUpReports();
 
     int updateUpReports(List<Map<String,Object>> list);
+
+    int updateById(Map<String, Object> params);
 }

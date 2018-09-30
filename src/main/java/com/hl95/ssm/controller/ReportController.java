@@ -30,7 +30,7 @@ public class ReportController {
 
     @RequestMapping(value = "/receivereport",method = RequestMethod.POST)
     @ResponseBody
-    public int receiveReport(HttpServletRequest request){
+    public String receiveReport(HttpServletRequest request){
         return stateReportService.saveReport(request);
     }
 }

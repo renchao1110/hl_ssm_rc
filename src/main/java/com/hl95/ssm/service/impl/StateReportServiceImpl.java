@@ -8,13 +8,13 @@ import com.hl95.ssm.util.RemoteHostUtil;
 import com.hl95.ssm.util.enums.SendTplSmsEnums;
 import com.hl95.ssm.util.resolve.ParamsResolve;
 import com.hl95.ssm.util.resolve.ResolveResult;
+import com.hl95.ssm.util.send.SendMsg;
 import com.hl95.ssm.util.validate.ValidateGetReportParams;
 import com.hl95.ssm.util.validate.ValidateUserAndPwd;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -94,7 +94,7 @@ public class StateReportServiceImpl implements StateReportService {
      * @return
      */
     @Override
-    public int saveReport(HttpServletRequest request) {
+    public String saveReport(HttpServletRequest request) {
         //1.获取请求参数。
         Map<String, Object> params = ParamsResolve.getParams(request);
         //首次保存添加默认值
@@ -108,10 +108,10 @@ public class StateReportServiceImpl implements StateReportService {
 
         }
         //保存状态报告
+        params.put("id","");
         int i = stateReportMapper.saveReport(params);
         //更新短信下发状态
         String rrid = (String) params.get("FLinkID");
-
 
         if (i==1&&rrid!=null&&!"".equals(rrid)){
             Map<String,Object> map = new HashMap<>();
@@ -125,6 +125,11 @@ public class StateReportServiceImpl implements StateReportService {
             }
             sendTplSmsResultMapper.updateByRrid(map);
         }
-        return i;
+
+        String state = SendMsg.sendPost(params);
+        if("0".equals(state)){
+            stateReportMapper.updateById(params);
+        }
+        return state;
     }
 }

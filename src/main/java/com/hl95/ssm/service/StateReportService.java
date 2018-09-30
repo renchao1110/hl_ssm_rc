@@ -22,5 +22,5 @@ public interface StateReportService {
      * @param request
      * @return
      */
-    int saveReport(HttpServletRequest request);
+    String saveReport(HttpServletRequest request);
 }

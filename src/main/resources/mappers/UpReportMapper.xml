@@ -46,11 +46,15 @@
 
 
   <insert id="saveUpReport" parameterType="com.hl95.ssm.entity.UpReport">
+    <selectKey statementType="CALLABLE" keyProperty="id" resultType="string" order="BEFORE">
+      select replace(uuid(),'-','') as id from dual
+    </selectKey>
     insert into upreport (id, phone, msgContent,
       spNumber, linkid, serviceup,datetime,state
       )
     values (
-    (select replace(UUID(),'-','')),
+    /*(select replace(UUID(),'-',''))*/
+    #{id,jdbcType=VARCHAR},
     #{phone,jdbcType=VARCHAR},
     #{msgContent,jdbcType=VARCHAR},
     #{spNumber,jdbcType=VARCHAR},
@@ -90,5 +94,12 @@
       #{item.id}
     </foreach>
     )
+  </update>
+
+  <update id="updateById" parameterType="map">
+    update upreport
+    set
+    state = '1'
+    where id =#{id}
   </update>
 </mapper>

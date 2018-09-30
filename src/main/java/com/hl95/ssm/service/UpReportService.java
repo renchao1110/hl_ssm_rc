@@ -10,7 +10,7 @@ import java.util.Map;
  * @create: 2018-09-27 13:41
  **/
 public interface UpReportService {
-    int saveUpReport(HttpServletRequest request);
+    String saveUpReport(HttpServletRequest request);
     /**
      * 获取上行信息的接口
      * @param request

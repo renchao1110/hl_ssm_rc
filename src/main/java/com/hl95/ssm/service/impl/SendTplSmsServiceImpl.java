@@ -103,6 +103,15 @@ public class SendTplSmsServiceImpl implements SendTplSmsService {
                     SendTplSmsTimerTask task = new SendTplSmsTimerTask(session,sendTplsms,sendTplsmsMapper,sendTplSmsResultMapper);
                     new ScheduledThreadPoolExecutor(1).schedule(task,date.getTime()-System.currentTimeMillis(), TimeUnit.MILLISECONDS);
                     //new Timer().schedule(task,date);
+                    for (SendTplsms tplsms:sendTplsms){
+                        Map<String,Object> tempMap = new HashMap<String,Object>(16);
+                        tempMap.put("rrid",tplsms.getRrid());
+                        tempMap.put("status","00");
+                        tempMap.put("reason","成功");
+                        l.add(tempMap);
+                    }
+                    result.put("result",l);
+                    return result;
 
                 } catch (ParseException e) {
                     e.printStackTrace();

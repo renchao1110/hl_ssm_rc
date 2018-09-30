@@ -22,7 +22,7 @@ public class UpReportController {
     private UpReportService upReportService;
     @RequestMapping(value = "/receiveUpReport",method = RequestMethod.POST)
     @ResponseBody
-    public int receiveReport(HttpServletRequest request){
+    public String receiveReport(HttpServletRequest request){
         return upReportService.saveUpReport(request);
     }
 

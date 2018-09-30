@@ -7,6 +7,7 @@ import com.hl95.ssm.util.RemoteHostUtil;
 import com.hl95.ssm.util.enums.SendTplSmsEnums;
 import com.hl95.ssm.util.resolve.ParamsResolve;
 import com.hl95.ssm.util.resolve.ResolveResult;
+import com.hl95.ssm.util.send.SendMsg;
 import com.hl95.ssm.util.validate.ValidateGetReportParams;
 import com.hl95.ssm.util.validate.ValidateUserAndPwd;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,15 +38,20 @@ public class UpReportServiceImpl implements UpReportService {
     private ValidateUserAndPwd validateUserAndPwd;
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     @Override
-    public int saveUpReport(HttpServletRequest request) {
+    public String saveUpReport(HttpServletRequest request) {
         //1.获取请求参数。
         Map<String, Object> params = ParamsResolve.getParams(request);
         Date now = new Date();
         String datetime = sdf.format(now);
         params.put("datetime",datetime);
         params.put("state","0");
-        int i = upReportMapper.saveUpReport(params);
-        return i;
+        params.put("id","");
+        upReportMapper.saveUpReport(params);
+        String state = SendMsg.sendPost(params);
+        if("0".equals(state)){
+            upReportMapper.updateById(params);
+        }
+        return state;
     }
 
     @Override
