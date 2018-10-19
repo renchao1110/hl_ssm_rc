@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hl95.ssm.dao.FilesMapper">
+  <resultMap id="BaseResultMap" type="com.hl95.ssm.entity.Files">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="filename" jdbcType="VARCHAR" property="filename" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from files
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hl95.ssm.entity.Files">
+    insert into files (id, filename, state
+      )
+    values (#{id,jdbcType=INTEGER}, #{filename,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.hl95.ssm.entity.Files">
+    update files
+    set filename = #{filename,jdbcType=VARCHAR},
+      state = #{state,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, filename, state
+    from files
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, filename, state
+    from files
+  </select>
+
+  <insert id="save" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+    insert into files (filename, state
+      )
+    values (#{filename,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}
+      )
+  </insert>
+
+  <select id="count" resultType="java.lang.Integer">
+    select count(*)
+    from files where filename=#{filename}
+  </select>
+
+  <insert id="saveBatch"  useGeneratedKeys="true" keyProperty="id">
+    insert into files (filename, state
+      )
+    values
+    <foreach collection="list" separator="," item="m" >
+      (
+      #{m.filename,jdbcType=VARCHAR}, #{m.state,jdbcType=VARCHAR}
+      )
+    </foreach>
+  </insert>
+</mapper>

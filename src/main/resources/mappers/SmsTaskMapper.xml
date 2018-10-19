@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hl95.ssm.dao.SmsTaskMapper">
+  <resultMap id="BaseResultMap" type="com.hl95.ssm.entity.SmsTask">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="UserID" jdbcType="VARCHAR" property="userid" />
+    <result column="SendID" jdbcType="VARCHAR" property="sendid" />
+    <result column="BranchID" jdbcType="VARCHAR" property="branchid" />
+    <result column="SendSpeed" jdbcType="VARCHAR" property="sendspeed" />
+    <result column="RequestTime" jdbcType="VARCHAR" property="requesttime" />
+    <result column="ScheduleTime" jdbcType="VARCHAR" property="scheduletime" />
+    <result column="ExpireTime" jdbcType="VARCHAR" property="expiretime" />
+    <result column="ServiceId" jdbcType="VARCHAR" property="serviceid" />
+    <result column="OrgAddr" jdbcType="VARCHAR" property="orgaddr" />
+    <result column="SMContent" jdbcType="VARCHAR" property="smcontent" />
+    <result column="SMPRAM" jdbcType="VARCHAR" property="smpram" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sms_task
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hl95.ssm.entity.SmsTask">
+    insert into sms_task (id, UserID, SendID, 
+      BranchID, SendSpeed, RequestTime, 
+      ScheduleTime, ExpireTime, ServiceId, 
+      OrgAddr, SMContent, SMPRAM, 
+      state)
+    values (#{id,jdbcType=INTEGER}, #{userid,jdbcType=VARCHAR}, #{sendid,jdbcType=VARCHAR}, 
+      #{branchid,jdbcType=VARCHAR}, #{sendspeed,jdbcType=VARCHAR}, #{requesttime,jdbcType=VARCHAR}, 
+      #{scheduletime,jdbcType=VARCHAR}, #{expiretime,jdbcType=VARCHAR}, #{serviceid,jdbcType=VARCHAR}, 
+      #{orgaddr,jdbcType=VARCHAR}, #{smcontent,jdbcType=VARCHAR}, #{smpram,jdbcType=VARCHAR}, 
+      #{state,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.hl95.ssm.entity.SmsTask">
+    update sms_task
+    set UserID = #{userid,jdbcType=VARCHAR},
+      SendID = #{sendid,jdbcType=VARCHAR},
+      BranchID = #{branchid,jdbcType=VARCHAR},
+      SendSpeed = #{sendspeed,jdbcType=VARCHAR},
+      RequestTime = #{requesttime,jdbcType=VARCHAR},
+      ScheduleTime = #{scheduletime,jdbcType=VARCHAR},
+      ExpireTime = #{expiretime,jdbcType=VARCHAR},
+      ServiceId = #{serviceid,jdbcType=VARCHAR},
+      OrgAddr = #{orgaddr,jdbcType=VARCHAR},
+      SMContent = #{smcontent,jdbcType=VARCHAR},
+      SMPRAM = #{smpram,jdbcType=VARCHAR},
+      state = #{state,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, UserID, SendID, BranchID, SendSpeed, RequestTime, ScheduleTime, ExpireTime, 
+    ServiceId, OrgAddr, SMContent, SMPRAM, state
+    from sms_task
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, UserID, SendID, BranchID, SendSpeed, RequestTime, ScheduleTime, ExpireTime, 
+    ServiceId, OrgAddr, SMContent, SMPRAM, state
+    from sms_task
+  </select>
+
+
+  <insert id="saveSmsTask" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+    insert into sms_task (UserID, SendID,
+      BranchID, SendSpeed, RequestTime,
+      ScheduleTime, ExpireTime, ServiceId,
+      OrgAddr, SMContent, SMPRAM,
+      state)
+    values
+      (#{UserID,jdbcType=VARCHAR}, #{SendID,jdbcType=VARCHAR},
+      #{BranchID,jdbcType=VARCHAR}, #{SendSpeed,jdbcType=VARCHAR}, #{RequestTime,jdbcType=VARCHAR},
+      #{ScheduleTime,jdbcType=VARCHAR}, #{ExpireTime,jdbcType=VARCHAR}, #{ServiceId,jdbcType=VARCHAR},
+      #{OrgAddr,jdbcType=VARCHAR}, #{SMContent,jdbcType=VARCHAR}, #{SMPRAM,jdbcType=VARCHAR},
+      #{state,jdbcType=VARCHAR})
+  </insert>
+
+  <resultMap id="ResultMap" type="com.hl95.ssm.entity.SmsTask">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="UserID" jdbcType="VARCHAR" property="userid" />
+    <result column="SendID" jdbcType="VARCHAR" property="sendid" />
+    <result column="BranchID" jdbcType="VARCHAR" property="branchid" />
+    <result column="SendSpeed" jdbcType="VARCHAR" property="sendspeed" />
+    <result column="RequestTime" jdbcType="VARCHAR" property="requesttime" />
+    <result column="ScheduleTime" jdbcType="VARCHAR" property="scheduletime" />
+    <result column="ExpireTime" jdbcType="VARCHAR" property="expiretime" />
+    <result column="ServiceId" jdbcType="VARCHAR" property="serviceid" />
+    <result column="OrgAddr" jdbcType="VARCHAR" property="orgaddr" />
+    <result column="SMContent" jdbcType="VARCHAR" property="smcontent" />
+    <result column="SMPRAM" jdbcType="VARCHAR" property="smpram" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+  </resultMap>
+  <select id="getTasks" resultMap="BaseResultMap">
+    select id, UserID, SendID, BranchID, SendSpeed, RequestTime, ScheduleTime, ExpireTime,
+    ServiceId, OrgAddr, SMContent, SMPRAM, state
+    from sms_task where state = '1'
+  </select>
+
+  <update id="updateErrorStateById" parameterType="list">
+    update sms_task
+    set
+      state = '-1'
+    where id in
+    <foreach collection="list" separator="," item="item" open="(" close=")">
+      #{item}
+    </foreach>
+  </update>
+
+  <update id="updateStateById" parameterType="list">
+    update sms_task
+    set
+    state = '2'
+    where id in
+    <foreach collection="list" separator="," item="item" open="(" close=")">
+      #{item}
+    </foreach>
+  </update>
+
+  <update id="updateCompleteStateById" parameterType="list">
+    update sms_task
+    set
+    state = '3'
+    where id in
+    <foreach collection="list" separator="," item="item" open="(" close=")">
+      #{item}
+    </foreach>
+  </update>
+
+  <select id="getCompleteTask" resultType="map">
+    select id ,UserID, SendID,  state
+    from sms_task where state = '2'
+  </select>
+</mapper>

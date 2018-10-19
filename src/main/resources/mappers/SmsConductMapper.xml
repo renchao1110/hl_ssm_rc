@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hl95.ssm.dao.SmsConductMapper">
+  <resultMap id="BaseResultMap" type="com.hl95.ssm.entity.SmsConduct">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="UserID" jdbcType="VARCHAR" property="userid" />
+    <result column="SendID" jdbcType="VARCHAR" property="sendid" />
+    <result column="SendSpeed" jdbcType="VARCHAR" property="sendspeed" />
+    <result column="RequestTime" jdbcType="VARCHAR" property="requesttime" />
+    <result column="ScheduleTime" jdbcType="VARCHAR" property="scheduletime" />
+    <result column="ExpireTime" jdbcType="VARCHAR" property="expiretime" />
+    <result column="SMContent" jdbcType="VARCHAR" property="smcontent" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="orgnumber" jdbcType="VARCHAR" property="orgnumber" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+    <result column="reason" jdbcType="VARCHAR" property="reason" />
+  </resultMap>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sms_conduct
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hl95.ssm.entity.SmsConduct">
+    insert into sms_conduct (id, UserID, SendID, 
+      SendSpeed, RequestTime, ScheduleTime, 
+      ExpireTime, SMContent, mobile, 
+      orgnumber, state, reason
+      )
+    values (#{id,jdbcType=INTEGER}, #{userid,jdbcType=VARCHAR}, #{sendid,jdbcType=VARCHAR}, 
+      #{sendspeed,jdbcType=VARCHAR}, #{requesttime,jdbcType=VARCHAR}, #{scheduletime,jdbcType=VARCHAR}, 
+      #{expiretime,jdbcType=VARCHAR}, #{smcontent,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
+      #{orgnumber,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}, #{reason,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.hl95.ssm.entity.SmsConduct">
+    update sms_conduct
+    set UserID = #{userid,jdbcType=VARCHAR},
+      SendID = #{sendid,jdbcType=VARCHAR},
+      SendSpeed = #{sendspeed,jdbcType=VARCHAR},
+      RequestTime = #{requesttime,jdbcType=VARCHAR},
+      ScheduleTime = #{scheduletime,jdbcType=VARCHAR},
+      ExpireTime = #{expiretime,jdbcType=VARCHAR},
+      SMContent = #{smcontent,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      orgnumber = #{orgnumber,jdbcType=VARCHAR},
+      state = #{state,jdbcType=VARCHAR},
+      reason = #{reason,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, UserID, SendID, SendSpeed, RequestTime, ScheduleTime, ExpireTime, SMContent, 
+    mobile, orgnumber, state, reason
+    from sms_conduct
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, UserID, SendID, SendSpeed, RequestTime, ScheduleTime, ExpireTime, SMContent, 
+    mobile, orgnumber, state, reason
+    from sms_conduct
+  </select>
+
+  <resultMap id="ResultMap" type="java.util.Map">
+    <id column="id" jdbcType="INTEGER" property="linkid" />
+    <result column="UserID" jdbcType="VARCHAR" property="userid" />
+    <result column="SendID" jdbcType="VARCHAR" property="sendid" />
+    <result column="SendSpeed" jdbcType="VARCHAR" property="sendspeed" />
+    <result column="RequestTime" jdbcType="VARCHAR" property="requesttime" />
+    <result column="ScheduleTime" jdbcType="VARCHAR" property="scheduletime" />
+    <result column="ExpireTime" jdbcType="VARCHAR" property="expiretime" />
+    <result column="SMContent" jdbcType="VARCHAR" property="message" />
+    <result column="mobile" jdbcType="VARCHAR" property="phone" />
+    <result column="orgnumber" jdbcType="VARCHAR" property="orgnumber" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+    <result column="reason" jdbcType="VARCHAR" property="reason" />
+  </resultMap>
+
+  <insert id="saveBatchMsg" parameterType="list" useGeneratedKeys="true" keyProperty="id">
+    insert into sms_conduct (UserID, SendID,
+      SendSpeed, RequestTime, ScheduleTime,
+      ExpireTime, SMContent, mobile,
+      orgnumber, state, reason
+      )
+    values
+    <foreach collection="list" item="m" separator="," >
+      (
+      #{m.UserID,jdbcType=VARCHAR}, #{m.SendID,jdbcType=VARCHAR},
+      #{m.SendSpeed,jdbcType=VARCHAR}, #{m.RequestTime,jdbcType=VARCHAR}, #{m.ScheduleTime,jdbcType=VARCHAR},
+      #{m.ExpireTime,jdbcType=VARCHAR}, #{m.SMContent,jdbcType=VARCHAR}, #{m.mobile,jdbcType=VARCHAR},
+      #{m.orgnumber,jdbcType=VARCHAR}, #{m.state,jdbcType=VARCHAR}, #{m.reason,jdbcType=VARCHAR}
+      )
+    </foreach>
+  </insert>
+
+  <select id="getMsgsByTaskId" parameterType="string" resultMap="ResultMap">
+    select id, UserID, SendID, SendSpeed, RequestTime, ScheduleTime, ExpireTime, SMContent,
+    mobile, orgnumber, state, reason
+    from sms_conduct where state = '1' and UserID = #{userId} and SendID = #{sendId}
+  </select>
+
+  <select id="getMsgs" parameterType="string" resultMap="ResultMap">
+    select id, UserID, SendID, SendSpeed, RequestTime, ScheduleTime, ExpireTime, SMContent,
+    mobile, orgnumber, state, reason
+    from sms_conduct where state = '2' and UserID = #{userId} and SendID = #{sendId}
+  </select>
+
+  <update id="updateByIds" parameterType="com.hl95.ssm.entity.SmsConduct">
+    update sms_conduct
+    set
+      state = '2',
+      reason = '提交成功'
+    where id in
+    <foreach collection="list" close=")" open="(" item="item" separator=",">
+      #{item}
+    </foreach>
+  </update>
+
+  <update id="updateByErrorIds" parameterType="com.hl95.ssm.entity.SmsConduct">
+    update sms_conduct
+    set
+    state = '-1',
+    reason = '提交失败'
+    where id in
+    <foreach collection="list" close=")" open="(" item="item" separator=",">
+      #{item}
+    </foreach>
+  </update>
+
+
+  <update id="updateByLinkId" parameterType="map">
+    update sms_conduct
+    <set>
+      <if test="state!=null and state!='' ">
+        state = #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="reason!=null and reason!='' ">
+        reason = #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="requesttime!=null and requesttime!='' ">
+        stime = #{requesttime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+
+  <select id="findSmsByLinkId" parameterType="string" resultMap="BaseResultMap">
+    select id, UserID, SendID, SendSpeed, RequestTime, ScheduleTime, ExpireTime, SMContent,
+    mobile, orgnumber, state, reason
+    from sms_conduct
+    where id = #{id}
+  </select>
+</mapper>

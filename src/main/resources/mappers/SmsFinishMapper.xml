@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hl95.ssm.dao.SmsFinishMapper">
+  <resultMap id="BaseResultMap" type="com.hl95.ssm.entity.SmsFinish">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="UserID" jdbcType="VARCHAR" property="userid" />
+    <result column="SendID" jdbcType="VARCHAR" property="sendid" />
+    <result column="SendSpeed" jdbcType="VARCHAR" property="sendspeed" />
+    <result column="RequestTime" jdbcType="VARCHAR" property="requesttime" />
+    <result column="ScheduleTime" jdbcType="VARCHAR" property="scheduletime" />
+    <result column="ExpireTime" jdbcType="VARCHAR" property="expiretime" />
+    <result column="SMContent" jdbcType="VARCHAR" property="smcontent" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="orgnumber" jdbcType="VARCHAR" property="orgnumber" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+    <result column="reason" jdbcType="VARCHAR" property="reason" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sms_finish
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hl95.ssm.entity.SmsFinish">
+    insert into sms_finish (id, UserID, SendID, 
+      SendSpeed, RequestTime, ScheduleTime, 
+      ExpireTime, SMContent, mobile, 
+      orgnumber, state, reason
+      )
+    values (#{id,jdbcType=INTEGER}, #{userid,jdbcType=VARCHAR}, #{sendid,jdbcType=VARCHAR}, 
+      #{sendspeed,jdbcType=VARCHAR}, #{requesttime,jdbcType=VARCHAR}, #{scheduletime,jdbcType=VARCHAR}, 
+      #{expiretime,jdbcType=VARCHAR}, #{smcontent,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
+      #{orgnumber,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}, #{reason,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.hl95.ssm.entity.SmsFinish">
+    update sms_finish
+    set UserID = #{userid,jdbcType=VARCHAR},
+      SendID = #{sendid,jdbcType=VARCHAR},
+      SendSpeed = #{sendspeed,jdbcType=VARCHAR},
+      RequestTime = #{requesttime,jdbcType=VARCHAR},
+      ScheduleTime = #{scheduletime,jdbcType=VARCHAR},
+      ExpireTime = #{expiretime,jdbcType=VARCHAR},
+      SMContent = #{smcontent,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      orgnumber = #{orgnumber,jdbcType=VARCHAR},
+      state = #{state,jdbcType=VARCHAR},
+      reason = #{reason,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, UserID, SendID, SendSpeed, RequestTime, ScheduleTime, ExpireTime, SMContent, 
+    mobile, orgnumber, state, reason
+    from sms_finish
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, UserID, SendID, SendSpeed, RequestTime, ScheduleTime, ExpireTime, SMContent, 
+    mobile, orgnumber, state, reason
+    from sms_finish
+  </select>
+</mapper>

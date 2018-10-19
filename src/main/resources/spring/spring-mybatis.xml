@@ -19,7 +19,7 @@ http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
 		<property name="password" value="${jdbc_password}" />
 
 		<!-- 初始化连接大小 -->
-		<property name="initialSize" value="0" />
+		<property name="initialSize" value="10" />
 		<!-- 连接池最大使用连接数量 -->
 		<property name="maxActive" value="20" />
 		<!-- 连接池最大空闲 -->

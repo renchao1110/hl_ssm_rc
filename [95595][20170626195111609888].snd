@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="gb2312"?>
+
+<FileTask>
+  <UserID>95595</UserID>
+  <SendID>20170626195111609888</SendID>
+  <BranchID></BranchID>
+  <SendSpeed>0.001</SendSpeed>
+  <RequestTime>20170626195111</RequestTime>
+  <ScheduleTime>20170626091000</ScheduleTime>
+  <ExpireTime>20170626220000</ExpireTime>
+  <ServiceId>ceb</ServiceId>
+  <OrgAddr></OrgAddr>
+  <SMContent></SMContent>
+  <SMPRAM>0</SMPRAM>
+</FileTask>
+        <!--13810091467|*|100106|*|HI!  DX  伍定远*退订回00
+18628686899|*|100106|*|HI!  DX  卢云*退订回00
+18628686899|*|100106|*|HI!  DX  秦仲海*退订回00
+13810091467|*|100106|*|HI!  DX  杨肃观*退订回00-->

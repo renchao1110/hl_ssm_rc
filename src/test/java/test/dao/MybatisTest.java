@@ -1,10 +1,8 @@
 package test.dao;
 
 import com.hl95.ssm.dao.*;
-import com.hl95.ssm.entity.Address;
-import com.hl95.ssm.entity.MsgTemplet;
-import com.hl95.ssm.entity.SendTplsms;
-import com.hl95.ssm.entity.User;
+import com.hl95.ssm.entity.*;
+import com.hl95.ssm.util.read.ReadSNDFile;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -40,7 +38,7 @@ public class MybatisTest {
             //2.加载SqlMapConfig.xml配置文件D:\idea_workspace\hl_ssm_rc\src\test\resources\SqlMapConfig.xml
             inputStream = Resources.getResourceAsStream("config/SqlMapConfig.xml");
             //加载log4j配置
-            //PropertyConfigurator.configure(Resources.getResourceAsProperties("loj4j.properties"));
+            //PropertyConfigurator.configure(Resources.getResourceAsProperties("config/loj4j.properties"));
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("读取配置文件异常==="+e.getMessage());
@@ -227,18 +225,52 @@ public class MybatisTest {
 
 
 
+    }*/
+
+    /*@Test*/
+    /*public void testMap(){
+
+        SqlSession session = sessionFactory.openSession();
+        FilesMapper mapper = session.getMapper(FilesMapper.class);
+
+        List<Map<String, Object>> l = new ArrayList<>();
+        for (int i=0;i<4;i++){
+            Map<String, Object> map = new HashMap<>();
+            //map.put("id",i);
+            map.put("filename","filename"+i);
+            map.put("state",""+i);
+            l.add(map);
+        }
+        //mapper.saveBatch(l);
+        session.commit();
+
+    }*/
+
+    /*@Test
+    public void updateReports() throws ParseException {
+
+        SqlSession session = sessionFactory.openSession();
+        SmsConductMapper mapper = session.getMapper(SmsConductMapper.class);
+        *//*List<Map<String, Object>> msgs = mapper.getMsgsByTaskId("95595", "20170626195111609888");
+        for (Map<String, Object> map:msgs){
+            System.out.println(map);
+            SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMddHHmmss");
+        }*//*
+        SmsConduct smsByLinkId = mapper.findSmsByLinkId("450");
+        System.out.println(smsByLinkId);
+
+
     }
 
     @Test
-    public void updateReports(){
+    public void testSmsTaskMapper(){
 
         SqlSession session = sessionFactory.openSession();
-        StateReportMapper mapper = session.getMapper(StateReportMapper.class);
-        List<Map<String,Object>> reports = mapper.getReports();
-        for (Map sms:reports){
-            System.out.println(sms);
+        SmsTaskMapper mapper = session.getMapper(SmsTaskMapper.class);
+        List<Map<String, String>> completeTask = mapper.getCompleteTask();
+        for (Map s : completeTask){
+            System.out.println(s);
         }
-
 
 
     }*/

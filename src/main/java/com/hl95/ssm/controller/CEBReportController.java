@@ -1,6 +1,7 @@
 package com.hl95.ssm.controller;
 
-import com.hl95.ssm.service.StateReportService;
+import com.hl95.ssm.service.CEBStateReportService;
+import com.hl95.ssm.service.impl.CEBStateReportServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,33 +15,19 @@ import java.util.Map;
  * @program: hl_ssm_rc
  * @description: 获取短信下发的状态报告
  * @author: renchao
- * @create: 2018-09-26 15:33
  **/
 @Controller
-public class ReportController {
+public class CEBReportController {
     @Autowired
-    private StateReportService stateReportService;
-
-    /**
-     * 获取状态报告接口
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "/getreport",method = RequestMethod.POST)
-    @ResponseBody
-    public Map<String,Object> getReport(HttpServletRequest request){
-        return stateReportService.getStateReport(request);
-    }
-
-
+    private CEBStateReportService cebStateReportService;
     /**
      * 接收并保存状态报告
      * @param request
      * @return
      */
-    @RequestMapping(value = "/receivereport",method = RequestMethod.POST)
+    @RequestMapping(value = "/receiveCEBreport",method = RequestMethod.POST)
     @ResponseBody
     public String receiveReport(HttpServletRequest request){
-        return stateReportService.saveReport(request);
+        return cebStateReportService.saveReport(request);
     }
 }

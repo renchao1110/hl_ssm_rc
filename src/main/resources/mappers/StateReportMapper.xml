@@ -133,4 +133,14 @@
     state = '1'
     where id = #{id}
   </update>
+
+  <select id="getReportsByids" parameterType="list" resultType="map">
+    select id, PlatForm, FUnikey, FOrgAddr, FDestAddr, FSubmitTime, FFeeTerminal, FServiceUPID,
+    FReportCode, FLinkID, FAckStatus, state, reason
+    from statereport
+    where FLinkID in
+    <foreach collection="list" separator="," item="item" open="(" close=")">
+      #{item}
+    </foreach>
+  </select>
 </mapper>
