@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 功能：单元测试
@@ -207,25 +208,32 @@ public class MybatisTest {
         System.out.println(i);
     }*/
 
-    /*@Test
+    @Test
     public void testMapperDao3(){
 
-        SqlSession session = sessionFactory.openSession();
+        /*SqlSession session = sessionFactory.openSession();
         StateReportMapper mapper = session.getMapper(StateReportMapper.class);
         List<Map<String,Object>> reports = mapper.getReports();
-
-        List<String> list = new ArrayList<>();
+        List<String> reportIds = Arrays.asList(455).stream().map(x -> x + "").collect(Collectors.toList());
+        int i = 0;
+        try {
+            i = mapper.updateReportsByIds(reportIds);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        System.out.println(i);*/
+        /*List<String> list = new ArrayList<>();
         list.size();
         for (Map sms:reports){
             System.out.println(sms);
         }
         int i = mapper.updateReports(reports);
         System.out.println(i);
-        session.commit();
+        session.commit();*/
 
 
 
-    }*/
+    }
 
     /*@Test*/
     /*public void testMap(){

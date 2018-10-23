@@ -17,6 +17,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @program: hl_ssm_rc
@@ -64,7 +65,7 @@ public class CEBStateReportServiceImpl implements CEBStateReportService {
                 map.put("state","0");
             }else {
                 map.put("reason","短信下发失败");
-                map.put("state","0");
+                map.put("state","-1");
             }
             smsConductMapper.updateByLinkId(map);
         }
@@ -104,8 +105,10 @@ public class CEBStateReportServiceImpl implements CEBStateReportService {
             List<Integer> reportIds = (List<Integer>)temp.get("reportIds");
             String filename = (String) temp.get("fileName");
             List<Map<String, String>> reports = stateReportMapper.getReportsByids(reportIds);
+            stateReportMapper.updateReportsByIds(reportIds.stream().map(x -> x + "").collect(Collectors.toList()));
             writeFile(filename,reports);
         }
+
         smsTaskMapper.updateCompleteStateById(taskIds);
     }
 
@@ -119,8 +122,9 @@ public class CEBStateReportServiceImpl implements CEBStateReportService {
             String rptURL = p.getProperty("rptURL");
             File rptFile = new File(rptURL+"\\"+fileName);
             if (!rptFile.exists()){
-                rptFile.createNewFile();
+                rptFile.getParentFile().mkdirs();
             }
+            rptFile.createNewFile();
             pw = new PrintWriter(rptFile);
             pw.println(list.size());
             for (Map<String, String> content:list){

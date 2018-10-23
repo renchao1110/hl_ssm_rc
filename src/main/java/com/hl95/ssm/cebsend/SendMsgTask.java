@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * @program: hl_ssm_rc
- * @description: 获取要发送的消息
+ * @description: 获取要发送的 主表 任务
  * @author: renchao
  * @create: 2018-10-17 15:08
  **/
@@ -31,7 +31,6 @@ public class SendMsgTask {
     private SmsConductMapper smsConductMapper;
     @Autowired
     private SendSmsTask sendSmsTask;
-    private ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(1);
     private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMddHHmmss");
 
 

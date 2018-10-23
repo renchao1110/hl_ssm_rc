@@ -25,7 +25,7 @@ public class SendSmsListener implements ApplicationListener<ContextRefreshedEven
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if (event.getApplicationContext().getParent()==null){
-            //executorService.scheduleWithFixedDelay(sendMsgTask,7000,1000, TimeUnit.MILLISECONDS);
+            //executorService.scheduleWithFixedDelay(sendMsgTask,20000,1000, TimeUnit.MILLISECONDS);
         }
     }
 }

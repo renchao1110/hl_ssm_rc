@@ -15,7 +15,7 @@ import java.util.Map;
 
 /**
  * @program: hl_ssm_rc
- * @description: ${description}
+ * @description: 解析snd文件读取信息进行入库操作
  * @author: renchao
  * @create: 2018-10-16 10:05
  **/
@@ -31,7 +31,7 @@ public class ReadTask implements Runnable {
     @Override
     public void run() {
 
-        System.out.println("########4秒执行一次##########"+sdf.format(new Date()));
+        System.out.println("########################开始解析文件准备入库##########################"+sdf.format(new Date()));
         List<Map> saveParams = null;
         try {
             List<Map<String, String>> list = readSNDFile.readSNDFile();

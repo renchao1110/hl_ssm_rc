@@ -24,13 +24,38 @@ public class ReadSNDFile {
     private static final Pattern PATTERN = Pattern.compile("(<FileTask>(.*)</FileTask>)");//[a-zA-Z0-9.]
     private static final Pattern PATTERNXML = Pattern.compile("^<[a-zA-Z]+(>)$|^<[a-zA-Z]+(>){1}[\\s\\S]*(</){1}[a-zA-Z]+(>)$|(^(</)[a-zA-Z]+(>)$)");
     private static final Pattern PATTERNMSG = Pattern.compile("^[\\d]+");
-    private static final File DESTFILE = new File("D:\\dest_snd");
-    private static final File ERRORFILE = new File("D:\\error_snd");
+    private static  File DESTFILE = null;//new File("D:\\dest_snd");
+    private static  File ERRORFILE = null;//new File("D:\\error_snd");
+    private static String fileURL = null;
+
+    static {
+        Properties p = new Properties();
+        InputStream in = ReadSNDFile.class.getClassLoader().getResourceAsStream("config/fileURL.properties");
+        try {
+            p.load(in);
+            String destURL = p.getProperty("destURL");
+            String errorURL = p.getProperty("errorURL");
+            fileURL = p.getProperty("sndURL");
+            DESTFILE = new File(destURL);
+            ERRORFILE = new File(errorURL);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            if (in!=null){
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+    }
     public List<Map<String,String>> readSNDFile() throws IOException {
         List<Map<String,String>> list = new ArrayList<>();
         InputStream in = null;
         BufferedReader br = null;
-        String path = getFilepaths(getFileURL());
+        String path = getFilepaths(fileURL);
         if ("".equals(path)||path==null){
             return list;
         }
@@ -120,26 +145,6 @@ public class ReadSNDFile {
         return filePatch;
     }
 
-    public static String getFileURL(){
-        String fileURL = "";
-        Properties properties = new Properties();
-        InputStream in = ReadSNDFile.class.getClassLoader().getResourceAsStream("config/fileURL.properties");
-        try {
-            properties.load(in);
-            fileURL = properties.getProperty("sndURL");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }finally {
-            if (in!=null){
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return fileURL;
-    }
     public static void main(String[] args) throws IOException, DocumentException {
         //System.out.println(getFilepaths("D:\snd"));
         //System.out.println(readSNDFile("D:\\snd"));

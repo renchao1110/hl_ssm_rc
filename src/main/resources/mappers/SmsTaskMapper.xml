@@ -101,9 +101,14 @@
     set
       state = '-1'
     where id in
-    <foreach collection="list" separator="," item="item" open="(" close=")">
+    (
+    <if test="list==null or list.size==0">
+      ''
+    </if>
+    <foreach collection="list" separator="," item="item" >
       #{item}
     </foreach>
+    )
   </update>
 
   <update id="updateStateById" parameterType="list">
@@ -111,9 +116,14 @@
     set
     state = '2'
     where id in
-    <foreach collection="list" separator="," item="item" open="(" close=")">
+    (
+    <if test="list==null or list.size==0">
+      ''
+    </if>
+    <foreach collection="list" separator="," item="item" >
       #{item}
     </foreach>
+    )
   </update>
 
   <update id="updateCompleteStateById" parameterType="list">
@@ -121,9 +131,14 @@
     set
     state = '3'
     where id in
-    <foreach collection="list" separator="," item="item" open="(" close=")">
+    (
+    <if test="list==null or list.size==0">
+      ''
+    </if>
+    <foreach collection="list" separator="," item="item" >
       #{item}
     </foreach>
+    )
   </update>
 
   <select id="getCompleteTask" resultType="map">

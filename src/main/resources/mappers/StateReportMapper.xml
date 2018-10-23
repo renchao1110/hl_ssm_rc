@@ -98,7 +98,21 @@
     )
   </update>
 
-
+  <update id="updateReportsByIds" parameterType="list">
+    update statereport
+    set
+    state = '2',
+    reason = '已经生成rpt文件'
+    where FLinkID in
+    (
+    <if test="list==null or list.size==0">
+      ''
+    </if>
+    <foreach collection="list"  separator="," index="index" item="item">
+      #{item}
+    </foreach>
+    )
+  </update>
 
   <insert id="saveReport" parameterType="map" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     <selectKey statementType="CALLABLE" keyProperty="id" resultType="string" order="BEFORE">
@@ -139,8 +153,14 @@
     FReportCode, FLinkID, FAckStatus, state, reason
     from statereport
     where FLinkID in
-    <foreach collection="list" separator="," item="item" open="(" close=")">
+    (
+    <if test="list==null or list.size==0">
+      ''
+    </if>
+    <foreach collection="list" separator="," item="item" >
       #{item}
     </foreach>
+    )
+    and (state = '0' or state = '1')
   </select>
 </mapper>

@@ -15,7 +15,7 @@ import java.util.Map;
 
 /**
  * @program: hl_ssm_rc
- * @description: 解析xml文件
+ * @description: 解析xml文件 以及文件实体内容
  * @author: renchao
  * @create: 2018-10-12 13:11
  **/

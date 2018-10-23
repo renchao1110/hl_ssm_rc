@@ -25,7 +25,7 @@ public class WriterRptFileListener implements ApplicationListener<ContextRefresh
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if (event.getApplicationContext().getParent()==null){
-            executorService.scheduleWithFixedDelay(cebStateReportTask,10000,20000, TimeUnit.MILLISECONDS);
+            //executorService.scheduleWithFixedDelay(cebStateReportTask,15000,20000, TimeUnit.MILLISECONDS);
         }
     }
 }

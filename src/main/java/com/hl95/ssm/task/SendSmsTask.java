@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * @program: hl_ssm_rc
- * @description: 扫描发送短信的线程
+ * @description: 根据任务表 获取要 发送的短信
  * @author: renchao
  * @create: 2018-10-16 16:42
  **/
@@ -34,7 +34,7 @@ public class SendSmsTask implements Runnable{
     private ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(1);
     @Override
     public void run() {
-        System.out.println("#############################2秒执行一次#####################################");
+        System.out.println("#############################开始读取数据库发送短信#####################################");
         List<Integer> ids = new ArrayList<>();
         List<Integer> errorids = new ArrayList<>();
         String s  = "";
@@ -45,8 +45,10 @@ public class SendSmsTask implements Runnable{
                 sms.put("password","pjs123456");
                 sms.put("epid","109765");
                 String scheduletime = (String)sms.get("scheduletime");
-                long delay = SDF.parse(scheduletime).getTime()-new Date().getTime();
-                if (delay+1000>0){
+                String expiretime = (String)sms.get("expiretime");
+                long delay = SDF.parse(scheduletime).getTime()-new Date().getTime()+1000;
+                long expire = SDF.parse(expiretime).getTime()-new Date().getTime();
+                if (delay>0&&expire>=0){
                     executorService.schedule(new Runnable() {
                         @Override
                         public void run() {
@@ -65,9 +67,13 @@ public class SendSmsTask implements Runnable{
                         }
                     },delay, TimeUnit.MILLISECONDS);
                 }else {
-                    s = SendCEBMsg.sendPost(sms);
-                    if ("00".equals(s)){
-                        ids.add((Integer) sms.get("linkid"));
+                    if (expire>0){
+                        s = SendCEBMsg.sendPost(sms);
+                        if ("00".equals(s)){
+                            ids.add((Integer) sms.get("linkid"));
+                        }else {
+                            errorids.add((Integer) sms.get("linkid"));
+                        }
                     }else {
                         errorids.add((Integer) sms.get("linkid"));
                     }

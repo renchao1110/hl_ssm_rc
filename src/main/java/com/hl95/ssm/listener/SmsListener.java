@@ -24,7 +24,7 @@ public class SmsListener implements ApplicationListener<ContextRefreshedEvent> {
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if (event.getApplicationContext().getParent()==null){
-            //executorService.scheduleWithFixedDelay(readTask,7000,2000, TimeUnit.MILLISECONDS);
+            executorService.scheduleWithFixedDelay(readTask,10000,20000, TimeUnit.MILLISECONDS);
         }
     }
 }

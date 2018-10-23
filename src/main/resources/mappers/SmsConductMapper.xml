@@ -103,26 +103,36 @@
     from sms_conduct where state = '2' and UserID = #{userId} and SendID = #{sendId}
   </select>
 
-  <update id="updateByIds" parameterType="com.hl95.ssm.entity.SmsConduct">
+  <update id="updateByIds" >
     update sms_conduct
     set
       state = '2',
       reason = '提交成功'
     where id in
-    <foreach collection="list" close=")" open="(" item="item" separator=",">
+    (
+    <if test="list==null or list.size==0">
+      ''
+    </if>
+    <foreach collection="list"  item="item" separator=",">
       #{item}
     </foreach>
+    )
   </update>
 
-  <update id="updateByErrorIds" parameterType="com.hl95.ssm.entity.SmsConduct">
+  <update id="updateByErrorIds" >
     update sms_conduct
     set
     state = '-1',
     reason = '提交失败'
     where id in
-    <foreach collection="list" close=")" open="(" item="item" separator=",">
+    (
+    <if test="list==null or list.size==0">
+      ''
+    </if>
+    <foreach collection="list"  item="item" separator=",">
       #{item}
     </foreach>
+    )
   </update>
 
 
